@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Predictor de Supervivencia - Titanic</title>
+    <title>Árbol de Decisiones Ramificado</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -14,606 +14,1113 @@
         }
         
         body {
-            background: linear-gradient(135deg, #1a2a6c, #2a5298);
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             color: #333;
             line-height: 1.6;
-            min-height: 100vh;
             padding: 20px;
+            min-height: 100vh;
         }
         
         .container {
-            max-width: 1200px;
+            max-width: 1600px;
             margin: 0 auto;
         }
         
         header {
             text-align: center;
+            padding: 25px 0;
             margin-bottom: 30px;
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
-            background-color: rgba(0, 0, 0, 0.2);
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
         }
         
         h1 {
-            font-size: 2.5rem;
+            color: #2c3e50;
             margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            font-size: 2.8rem;
         }
         
         .subtitle {
+            color: #7f8c8d;
             font-size: 1.2rem;
-            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
         }
         
-        .content {
-            display: flex;
-            flex-wrap: wrap;
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 350px;
             gap: 30px;
             margin-bottom: 40px;
         }
         
-        .prediction-form {
-            flex: 1;
-            min-width: 300px;
-            background-color: white;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        @media (max-width: 1100px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
         }
         
-        .results {
-            flex: 1;
-            min-width: 300px;
+        .tree-section {
             background-color: white;
             border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            position: relative;
+            overflow: hidden;
+            min-height: 700px;
+        }
+        
+        .tree-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(to right, #3498db, #2ecc71);
+        }
+        
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-size: 1.6rem;
+        }
+        
+        .section-title i {
+            color: #3498db;
+            font-size: 1.8rem;
+        }
+        
+        .tree-container {
+            width: 100%;
+            overflow: auto;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 10px;
+            min-height: 600px;
+            position: relative;
+        }
+        
+        .tree-wrapper {
+            width: 100%;
+            height: 600px;
+            position: relative;
+        }
+        
+        .controls-sidebar {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            padding: 25px;
             display: flex;
             flex-direction: column;
+            gap: 25px;
         }
         
-        .form-group {
-            margin-bottom: 25px;
+        .controls-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
         
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #2a5298;
-        }
-        
-        input, select {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-        }
-        
-        input:focus, select:focus {
-            border-color: #2a5298;
-            outline: none;
+        .controls-title {
+            color: #2c3e50;
+            font-size: 1.3rem;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
         }
         
         .btn {
-            display: block;
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(to right, #2a5298, #1a2a6c);
-            color: white;
+            padding: 14px 20px;
             border: none;
-            border-radius: 8px;
-            font-size: 18px;
+            border-radius: 10px;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
-            margin-top: 20px;
-        }
-        
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        .btn:active {
-            transform: translateY(0);
-        }
-        
-        .result-display {
-            flex-grow: 1;
+            transition: all 0.3s ease;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 1rem;
+            width: 100%;
             text-align: center;
         }
         
-        .probability-circle {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
+        .btn-primary {
+            background: linear-gradient(to right, #3498db, #2980b9);
+            color: white;
+            box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(52, 152, 219, 0.4);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(to right, #e74c3c, #c0392b);
+            color: white;
+            box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3);
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(231, 76, 60, 0.4);
+        }
+        
+        .btn-success {
+            background: linear-gradient(to right, #2ecc71, #27ae60);
+            color: white;
+            box-shadow: 0 4px 10px rgba(46, 204, 113, 0.3);
+        }
+        
+        .btn-success:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(46, 204, 113, 0.4);
+        }
+        
+        .btn-info {
+            background: linear-gradient(to right, #9b59b6, #8e44ad);
+            color: white;
+            box-shadow: 0 4px 10px rgba(155, 89, 182, 0.3);
+        }
+        
+        .btn-info:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(155, 89, 182, 0.4);
+        }
+        
+        .decision-path {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            margin-top: 20px;
+        }
+        
+        .path-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+        }
+        
+        .path-title i {
+            color: #3498db;
+        }
+        
+        .path-container {
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            margin: 20px auto;
-            font-weight: bold;
-            font-size: 1.8rem;
-            color: white;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-            transition: all 0.5s ease;
+            gap: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 10px;
         }
         
-        .survived {
-            background: linear-gradient(135deg, #4CAF50, #2E7D32);
-        }
-        
-        .not-survived {
-            background: linear-gradient(135deg, #f44336, #c62828);
-        }
-        
-        .probability-value {
-            font-size: 3rem;
-            font-weight: 700;
-        }
-        
-        .prediction-text {
-            font-size: 1.8rem;
-            margin-top: 20px;
-            font-weight: 700;
-        }
-        
-        .explanation {
-            margin-top: 20px;
-            font-size: 1rem;
-            color: #666;
-            line-height: 1.5;
-        }
-        
-        .details {
-            margin-top: 30px;
-            padding: 20px;
-            background-color: #f8f9fa;
-            border-radius: 10px;
-        }
-        
-        .details h3 {
-            color: #2a5298;
-            margin-bottom: 15px;
-            font-size: 1.3rem;
-        }
-        
-        .factor-list {
-            list-style-type: none;
-        }
-        
-        .factor-list li {
-            padding: 8px 0;
-            border-bottom: 1px dashed #ddd;
+        .path-step {
             display: flex;
-            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            background: linear-gradient(to right, #f8f9fa, #e9ecef);
+            border-radius: 10px;
+            border-left: 5px solid #3498db;
+            transition: all 0.3s ease;
         }
         
-        .factor-list li:last-child {
-            border-bottom: none;
+        .path-step:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);
         }
         
-        .factor-positive {
-            color: #2E7D32;
+        .step-number {
+            background: #3498db;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
         }
         
-        .factor-negative {
-            color: #c62828;
+        .step-content {
+            flex-grow: 1;
         }
         
-        .factor-neutral {
-            color: #666;
+        .step-question {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .step-choice {
+            color: #27ae60;
+            font-style: italic;
+        }
+        
+        .current-decision {
+            background: linear-gradient(to right, #e8f4fc, #d4e6f1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            border-left: 5px solid #2ecc71;
+        }
+        
+        .decision-text {
+            font-size: 1.1rem;
+            color: #2c3e50;
+        }
+        
+        .decision-text strong {
+            color: #3498db;
+        }
+        
+        .result-text {
+            color: #e74c3c;
+            font-weight: bold;
         }
         
         footer {
             text-align: center;
-            color: white;
-            padding: 20px;
-            margin-top: 30px;
-            font-size: 0.9rem;
-            opacity: 0.8;
+            margin-top: 40px;
+            color: #7f8c8d;
+            padding: 25px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            font-size: 0.95rem;
         }
         
-        .instructions {
-            background-color: rgba(255, 255, 255, 0.9);
+        /* Estilos para el árbol personalizado */
+        .tree-node {
+            position: absolute;
+            padding: 12px 18px;
             border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 30px;
-            color: #333;
+            width: 200px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 10;
         }
         
-        .instructions h3 {
-            color: #2a5298;
-            margin-bottom: 10px;
+        .tree-node:hover {
+            transform: scale(1.05);
+            z-index: 20;
         }
         
-        @media (max-width: 768px) {
-            .content {
-                flex-direction: column;
-            }
-            
-            h1 {
-                font-size: 2rem;
-            }
+        .tree-node.root {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: 3px solid #2980b9;
         }
         
-        .ship-icon {
-            font-size: 2rem;
-            margin-bottom: 10px;
-            color: #2a5298;
+        .tree-node.option {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            border: 3px solid #27ae60;
+        }
+        
+        .tree-node.result {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            border: 3px solid #c0392b;
+        }
+        
+        .tree-node.active {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            border-color: #e67e22;
+            box-shadow: 0 0 0 5px rgba(243, 156, 18, 0.3);
+        }
+        
+        .node-title {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        
+        .node-desc {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+        
+        .tree-connector {
+            position: absolute;
+            background-color: #95a5a6;
+            z-index: 1;
+        }
+        
+        .tree-connector.horizontal {
+            height: 3px;
+        }
+        
+        .tree-connector.vertical {
+            width: 3px;
+        }
+        
+        .tree-connector.active {
+            background-color: #3498db;
+            box-shadow: 0 0 5px #3498db;
+        }
+        
+        .tree-stats {
+            display: flex;
+            justify-content: space-between;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        
+        .stat {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #3498db;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+        
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.85);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            pointer-events: none;
+            z-index: 100;
+            max-width: 300px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            display: none;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1><i class="fas fa-ship ship-icon"></i> Predictor de Supervivencia - Titanic</h1>
-            <p class="subtitle">Modelo probabilístico para predecir si hubieras sobrevivido al desastre del Titanic</p>
+            <h1><i class="fas fa-network-wired"></i> Árbol de Decisiones Ramificado</h1>
+            <p class="subtitle">Explora un modelo de árbol de decisiones complejo con múltiples ramas horizontales y visualización interactiva</p>
         </header>
         
-        <div class="instructions">
-            <h3><i class="fas fa-info-circle"></i> Instrucciones</h3>
-            <p>Introduce los datos de un pasajero para obtener una predicción probabilística de su supervivencia basada en análisis estadístico del dataset real del Titanic. El modelo considera factores como clase, género, edad y más.</p>
-        </div>
-        
-        <div class="content">
-            <div class="prediction-form">
-                <h2>Datos del Pasajero</h2>
-                <form id="passengerForm">
-                    <div class="form-group">
-                        <label for="pclass">Clase del Pasajero</label>
-                        <select id="pclass" name="pclass" required>
-                            <option value="">Selecciona la clase</option>
-                            <option value="1">Primera Clase</option>
-                            <option value="2">Segunda Clase</option>
-                            <option value="3">Tercera Clase</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="sex">Género</label>
-                        <select id="sex" name="sex" required>
-                            <option value="">Selecciona el género</option>
-                            <option value="female">Femenino</option>
-                            <option value="male">Masculino</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="age">Edad</label>
-                        <input type="number" id="age" name="age" min="0" max="100" placeholder="Ej: 25" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="sibsp">Número de Hermanos/Esposos a bordo</label>
-                        <input type="number" id="sibsp" name="sibsp" min="0" max="10" placeholder="Ej: 1" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="parch">Número de Padres/Hijos a bordo</label>
-                        <input type="number" id="parch" name="parch" min="0" max="10" placeholder="Ej: 0" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="fare">Tarifa del boleto (0$ a 600$)</label>
-                        <input type="number" id="fare" name="fare" min="0" max="600" step="0.1" placeholder="Ej: 30.5" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="embarked">Puerto de Embarque</label>
-                        <select id="embarked" name="embarked" required>
-                            <option value="">Selecciona el puerto</option>
-                            <option value="C">Cherburgo (C)</option>
-                            <option value="Q">Queenstown (Q)</option>
-                            <option value="S">Southampton (S)</option>
-                        </select>
-                    </div>
-                    
-                    <button type="submit" class="btn">
-                        <i class="fas fa-calculator"></i> Calcular Probabilidad de Supervivencia
-                    </button>
-                </form>
-            </div>
-            
-            <div class="results">
-                <h2>Resultado de la Predicción</h2>
-                <div class="result-display">
-                    <div id="probabilityCircle" class="probability-circle">
-                        <div id="probabilityValue">--%</div>
-                        <div>Probabilidad</div>
-                    </div>
-                    <div id="predictionText" class="prediction-text">
-                        Introduce datos para ver la predicción
-                    </div>
-                    <div id="explanation" class="explanation">
-                        Esta predicción se basa en un modelo probabilístico entrenado con datos reales del Titanic
+        <div class="main-content">
+            <section class="tree-section">
+                <div class="section-title">
+                    <i class="fas fa-project-diagram"></i>
+                    <h2>Árbol de Decisiones: Planificación de Proyectos</h2>
+                </div>
+                
+                <div class="tree-container">
+                    <div class="tree-wrapper" id="treeVisualization">
+                        <!-- El árbol se generará aquí -->
                     </div>
                 </div>
                 
-                <div class="details">
-                    <h3><i class="fas fa-chart-bar"></i> Factores que influyeron</h3>
-                    <ul class="factor-list" id="factorList">
-                        <li>Cargando análisis de factores...</li>
-                    </ul>
+                <div class="tree-stats">
+                    <div class="stat">
+                        <div class="stat-value" id="nodeCount">21</div>
+                        <div class="stat-label">Nodos Totales</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="levelCount">4</div>
+                        <div class="stat-label">Niveles</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="pathCount">12</div>
+                        <div class="stat-label">Caminos Posibles</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="decisionStep">0</div>
+                        <div class="stat-label">Paso Actual</div>
+                    </div>
+                </div>
+            </section>
+            
+            <aside class="controls-sidebar">
+                <div class="controls-section">
+                    <h3 class="controls-title"><i class="fas fa-cogs"></i> Controles</h3>
+                    <button class="btn btn-primary" id="startBtn">
+                        <i class="fas fa-play-circle"></i> Iniciar Decisión
+                    </button>
+                    <button class="btn btn-secondary" id="resetBtn">
+                        <i class="fas fa-redo-alt"></i> Reiniciar Todo
+                    </button>
+                    <button class="btn btn-success" id="autoBtn">
+                        <i class="fas fa-robot"></i> Recorrido Automático
+                    </button>
+                </div>
+                
+                <div class="controls-section">
+                    <h3 class="controls-title"><i class="fas fa-eye"></i> Vista</h3>
+                    <button class="btn btn-info" id="zoomInBtn">
+                        <i class="fas fa-search-plus"></i> Acercar
+                    </button>
+                    <button class="btn btn-info" id="zoomOutBtn">
+                        <i class="fas fa-search-minus"></i> Alejar
+                    </button>
+                    <button class="btn btn-info" id="centerBtn">
+                        <i class="fas fa-expand-arrows-alt"></i> Centrar Árbol
+                    </button>
+                </div>
+                
+                <div class="controls-section">
+                    <h3 class="controls-title"><i class="fas fa-bolt"></i> Ejemplos Rápidos</h3>
+                    <button class="btn btn-success" id="example1Btn">
+                        <i class="fas fa-chart-line"></i> Camino Exitoso
+                    </button>
+                    <button class="btn btn-secondary" id="example2Btn">
+                        <i class="fas fa-exclamation-triangle"></i> Camino Riesgoso
+                    </button>
+                    <button class="btn btn-primary" id="example3Btn">
+                        <i class="fas fa-balance-scale"></i> Camino Equilibrado
+                    </button>
+                </div>
+                
+                <div class="current-decision" id="currentDecision">
+                    <div class="decision-text">
+                        <i class="fas fa-info-circle"></i> 
+                        <strong>Estado:</strong> Esperando inicio de decisión. Haz clic en "Iniciar Decisión" para comenzar.
+                    </div>
+                </div>
+            </aside>
+        </div>
+        
+        <section class="decision-path">
+            <div class="path-title">
+                <i class="fas fa-road"></i>
+                <h3>Camino de Decisión Seleccionado</h3>
+            </div>
+            
+            <div class="path-container" id="decisionPath">
+                <div class="path-step">
+                    <div class="step-number">?</div>
+                    <div class="step-content">
+                        <div class="step-question">Sin decisiones tomadas aún</div>
+                        <div class="step-choice">Selecciona una opción en el árbol para comenzar</div>
+                    </div>
                 </div>
             </div>
-        </div>
+        </section>
         
         <footer>
-            <p>Modelo probabilístico basado en análisis estadístico del dataset del Titanic | Datos históricos de 1912</p>
-            <p>© 2023 Predictor de Supervivencia - Titanic | Solo con fines educativos</p>
+            <p><strong>Árbol de Decisiones Ramificado</strong> &copy; 2023 - Visualización Interactiva</p>
+            <p>Este modelo representa un árbol de decisiones complejo para planificación de proyectos con múltiples ramificaciones horizontales.</p>
         </footer>
     </div>
-    
+
+    <div class="tooltip" id="nodeTooltip"></div>
+
     <script>
-        // Análisis estadístico del dataset del Titanic
-        // Estos valores se han calculado previamente a partir del dataset proporcionado
-        const survivalStats = {
-            overall: 0.3838, // 38.38% de supervivencia general
-            
-            byClass: {
-                1: 0.6296, // 62.96% para primera clase
-                2: 0.4728, // 47.28% para segunda clase
-                3: 0.2424  // 24.24% para tercera clase
-            },
-            
-            bySex: {
-                female: 0.7420, // 74.20% para mujeres
-                male: 0.1889    // 18.89% para hombres
-            },
-            
-            byAgeGroup: {
-                child: 0.5906,    // 59.06% para niños (0-12)
-                teen: 0.3793,     // 37.93% para adolescentes (13-19)
-                adult: 0.3615,    // 36.15% para adultos (20-59)
-                senior: 0.3438    // 34.38% para mayores (60+)
-            },
-            
-            byFamilySize: {
-                alone: 0.3035,    // 30.35% para quienes viajan solos
-                small: 0.5789,    // 57.89% para familias pequeñas (1-3 miembros)
-                large: 0.1613     // 16.13% para familias grandes (4+ miembros)
-            },
-            
-            byFare: {
-                low: 0.1975,      // 19.75% para tarifas bajas (<10)
-                medium: 0.4839,   // 48.39% para tarifas medias (10-50)
-                high: 0.7200      // 72.00% para tarifas altas (>50)
-            },
-            
-            byEmbarked: {
-                C: 0.5536,        // 55.36% para Cherburgo
-                Q: 0.3896,        // 38.96% para Queenstown
-                S: 0.3368         // 33.68% para Southampton
-            }
+        // Estructura del árbol de decisiones
+        const decisionTree = {
+            id: "root",
+            name: "Inicio de Proyecto",
+            description: "Decide cómo abordar un nuevo proyecto empresarial",
+            type: "root",
+            children: [
+                {
+                    id: "agile",
+                    name: "Enfoque Ágil",
+                    description: "Metodología iterativa e incremental",
+                    type: "option",
+                    children: [
+                        {
+                            id: "team_small",
+                            name: "Equipo Pequeño",
+                            description: "Equipo de 3-5 personas",
+                            type: "option",
+                            children: [
+                                {
+                                    id: "sprints_short",
+                                    name: "Sprints Cortos",
+                                    description: "Iteraciones de 1-2 semanas",
+                                    type: "option",
+                                    children: [
+                                        {
+                                            id: "result1",
+                                            name: "Alta Adaptabilidad",
+                                            description: "Proyecto exitoso con capacidad de adaptación a cambios",
+                                            type: "result",
+                                            risk: "Bajo",
+                                            success: "Alto"
+                                        }
+                                    ]
+                                },
+                                {
+                                    id: "sprints_medium",
+                                    name: "Sprints Medios",
+                                    description: "Iteraciones de 3-4 semanas",
+                                    type: "option",
+                                    children: [
+                                        {
+                                            id: "result2",
+                                            name: "Resultado Estable",
+                                            description: "Proyecto entregado con funcionalidades sólidas",
+                                            type: "result",
+                                            risk: "Medio",
+                                            success: "Alto"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            id: "team_large",
+                            name: "Equipo Grande",
+                            description: "Equipo de 6-10 personas",
+                            type: "option",
+                            children: [
+                                {
+                                    id: "scaled",
+                                    name: "Agile Escalado",
+                                    description: "Framework SAFe o LeSS",
+                                    type: "option",
+                                    children: [
+                                        {
+                                            id: "result3",
+                                            name: "Complejidad Controlada",
+                                            description: "Proyecto complejo gestionado efectivamente",
+                                            type: "result",
+                                            risk: "Medio",
+                                            success: "Medio"
+                                        }
+                                    ]
+                                },
+                                {
+                                    id: "hybrid",
+                                    name: "Enfoque Híbrido",
+                                    description: "Combinación de metodologías",
+                                    type: "option",
+                                    children: [
+                                        {
+                                            id: "result4",
+                                            name: "Flexibilidad Moderada",
+                                            description: "Resultados variables dependiendo de la integración",
+                                            type: "result",
+                                            risk: "Alto",
+                                            success: "Medio"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    id: "traditional",
+                    name: "Enfoque Tradicional",
+                    description: "Metodología en cascada (Waterfall)",
+                    type: "option",
+                    children: [
+                        {
+                            id: "detailed",
+                            name: "Planificación Detallada",
+                            description: "Documentación exhaustiva antes de comenzar",
+                            type: "option",
+                            children: [
+                                {
+                                    id: "strict",
+                                    name: "Fases Estrictas",
+                                    description: "Secuencia lineal de fases",
+                                    type: "option",
+                                    children: [
+                                        {
+                                            id: "result5",
+                                            name: "Resultado Predecible",
+                                            description: "Proyecto entregado según lo planeado, pero sin flexibilidad",
+                                            type: "result",
+                                            risk: "Bajo",
+                                            success: "Medio"
+                                        }
+                                    ]
+                                },
+                                {
+                                    id: "flexible",
+                                    name: "Fases Flexibles",
+                                    description: "Alguna adaptación entre fases",
+                                    type: "option",
+                                    children: [
+                                        {
+                                            id: "result6",
+                                            name: "Control con Adaptación",
+                                            description: "Balance entre estructura y adaptabilidad",
+                                            type: "result",
+                                            risk: "Medio",
+                                            success: "Medio"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
         };
-        
-        // Función para calcular la probabilidad de supervivencia
-        function calculateSurvivalProbability(passengerData) {
-            // Iniciamos con la probabilidad base
-            let probability = survivalStats.overall;
-            let factors = [];
+
+        // Variables de estado
+        let currentPath = [];
+        let isDecisionActive = false;
+        let currentNode = null;
+
+        // Elementos del DOM
+        const treeContainer = document.getElementById('treeVisualization');
+        const nodeTooltip = document.getElementById('nodeTooltip');
+        const startBtn = document.getElementById('startBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const autoBtn = document.getElementById('autoBtn');
+        const zoomInBtn = document.getElementById('zoomInBtn');
+        const zoomOutBtn = document.getElementById('zoomOutBtn');
+        const centerBtn = document.getElementById('centerBtn');
+        const example1Btn = document.getElementById('example1Btn');
+        const example2Btn = document.getElementById('example2Btn');
+        const example3Btn = document.getElementById('example3Btn');
+
+        // Inicializar el árbol
+        function initTree() {
+            // Limpiar el contenedor
+            treeContainer.innerHTML = '';
             
-            // Factor de clase
-            const classFactor = survivalStats.byClass[passengerData.pclass];
-            const classImpact = (classFactor - survivalStats.overall) / 2;
-            probability += classImpact;
-            factors.push({
-                name: "Clase del pasajero",
-                value: passengerData.pclass === "1" ? "Primera" : (passengerData.pclass === "2" ? "Segunda" : "Tercera"),
-                impact: classImpact,
-                description: passengerData.pclass === "1" ? "Primera clase tenía mayor probabilidad de supervivencia" : 
-                            (passengerData.pclass === "2" ? "Segunda clase tenía probabilidad media" : "Tercera clase tenía menor probabilidad")
-            });
+            // Calcular dimensiones
+            const containerWidth = treeContainer.clientWidth;
+            const containerHeight = treeContainer.clientHeight;
             
-            // Factor de género
-            const sexFactor = survivalStats.bySex[passengerData.sex];
-            const sexImpact = (sexFactor - survivalStats.overall) / 2;
-            probability += sexImpact;
-            factors.push({
-                name: "Género",
-                value: passengerData.sex === "female" ? "Femenino" : "Masculino",
-                impact: sexImpact,
-                description: passengerData.sex === "female" ? "Las mujeres tenían prioridad en los botes salvavidas" : 
-                            "Los hombres tenían menor probabilidad de supervivencia"
-            });
+            // Posicionar nodo raíz
+            const rootX = containerWidth / 2;
+            const rootY = 80;
             
-            // Factor de edad
-            let ageGroup = "adult";
-            if (passengerData.age <= 12) ageGroup = "child";
-            else if (passengerData.age <= 19) ageGroup = "teen";
-            else if (passengerData.age >= 60) ageGroup = "senior";
+            // Crear nodo raíz
+            createTreeNode(decisionTree, rootX, rootY);
             
-            const ageFactor = survivalStats.byAgeGroup[ageGroup];
-            const ageImpact = (ageFactor - survivalStats.overall) / 3;
-            probability += ageImpact;
-            factors.push({
-                name: "Grupo de edad",
-                value: ageGroup === "child" ? "Niño (0-12)" : 
-                      (ageGroup === "teen" ? "Adolescente (13-19)" : 
-                      (ageGroup === "adult" ? "Adulto (20-59)" : "Mayor (60+)")),
-                impact: ageImpact,
-                description: ageGroup === "child" ? "Los niños tenían prioridad en los botes salvavidas" : 
-                            (ageGroup === "teen" ? "Adolescentes tenían probabilidad similar a adultos" : 
-                            (ageGroup === "adult" ? "Adultos tenían probabilidad media" : "Mayores tenían probabilidad ligeramente menor"))
-            });
-            
-            // Factor de tamaño familiar
-            const familySize = parseInt(passengerData.sibsp) + parseInt(passengerData.parch);
-            let familyGroup = "alone";
-            if (familySize === 0) familyGroup = "alone";
-            else if (familySize <= 3) familyGroup = "small";
-            else familyGroup = "large";
-            
-            const familyFactor = survivalStats.byFamilySize[familyGroup];
-            const familyImpact = (familyFactor - survivalStats.overall) / 3;
-            probability += familyImpact;
-            factors.push({
-                name: "Tamaño familiar",
-                value: familyGroup === "alone" ? "Viajaba solo" : 
-                      (familyGroup === "small" ? "Familia pequeña (1-3)" : "Familia grande (4+)"),
-                impact: familyImpact,
-                description: familyGroup === "alone" ? "Viajar solo reducía las probabilidades" : 
-                            (familyGroup === "small" ? "Familias pequeñas tenían mayor probabilidad" : 
-                            "Familias grandes tenían dificultades para mantenerse juntas")
-            });
-            
-            // Factor de tarifa
-            let fareGroup = "medium";
-            if (passengerData.fare < 10) fareGroup = "low";
-            else if (passengerData.fare > 50) fareGroup = "high";
-            
-            const fareFactor = survivalStats.byFare[fareGroup];
-            const fareImpact = (fareFactor - survivalStats.overall) / 3;
-            probability += fareImpact;
-            factors.push({
-                name: "Precio del billete",
-                value: fareGroup === "low" ? "Bajo (<10£)" : 
-                      (fareGroup === "medium" ? "Medio (10-50£)" : "Alto (>50£)"),
-                impact: fareImpact,
-                description: fareGroup === "low" ? "Billetes baratos indicaban menor clase y probabilidad" : 
-                            (fareGroup === "medium" ? "Billetes de precio medio tenían probabilidad media" : 
-                            "Billetes caros indicaban mayor clase y probabilidad")
-            });
-            
-            // Factor de puerto de embarque
-            const embarkedFactor = survivalStats.byEmbarked[passengerData.embarked];
-            const embarkedImpact = (embarkedFactor - survivalStats.overall) / 4;
-            probability += embarkedImpact;
-            factors.push({
-                name: "Puerto de embarque",
-                value: passengerData.embarked === "C" ? "Cherburgo" : 
-                      (passengerData.embarked === "Q" ? "Queenstown" : "Southampton"),
-                impact: embarkedImpact,
-                description: passengerData.embarked === "C" ? "Cherburgo tenía mayor proporción de supervivientes" : 
-                            (passengerData.embarked === "Q" ? "Queenstown tenía probabilidad media" : 
-                            "Southampton tenía menor proporción de supervivientes")
-            });
-            
-            // Ajustar la probabilidad para que esté entre 0 y 1
-            probability = Math.max(0.05, Math.min(0.95, probability));
-            
-            return { probability, factors };
+            // Renderizar recursivamente
+            renderTreeNodes(decisionTree, rootX, rootY, 0, containerWidth);
         }
-        
-        // Función para actualizar la interfaz con los resultados
-        function updateResults(passengerData, results) {
-            const probabilityPercent = Math.round(results.probability * 100);
-            const probabilityCircle = document.getElementById('probabilityCircle');
-            const probabilityValue = document.getElementById('probabilityValue');
-            const predictionText = document.getElementById('predictionText');
-            const explanation = document.getElementById('explanation');
-            const factorList = document.getElementById('factorList');
+
+        // Crear un nodo del árbol
+        function createTreeNode(node, x, y) {
+            const nodeElement = document.createElement('div');
+            nodeElement.className = tree-node ${node.type};
+            nodeElement.id = node-${node.id};
+            nodeElement.style.left = ${x}px;
+            nodeElement.style.top = ${y}px;
             
-            // Actualizar círculo de probabilidad
-            probabilityValue.textContent = `${probabilityPercent}%`;
+            nodeElement.innerHTML = `
+                <div class="node-title">${node.name}</div>
+                <div class="node-desc">${node.description}</div>
+            `;
             
-            if (probabilityPercent >= 50) {
-                probabilityCircle.className = 'probability-circle survived';
-                predictionText.textContent = 'PROBABLE SUPERVIVIENTE';
-                predictionText.style.color = '#2E7D32';
-                explanation.textContent = `Basado en las características ingresadas, este pasajero tendría una probabilidad del ${probabilityPercent}% de sobrevivir al desastre del Titanic.`;
-            } else {
-                probabilityCircle.className = 'probability-circle not-survived';
-                predictionText.textContent = 'PROBABLE VÍCTIMA';
-                predictionText.style.color = '#c62828';
-                explanation.textContent = `Basado en las características ingresadas, este pasajero tendría una probabilidad del ${probabilityPercent}% de sobrevivir al desastre del Titanic.`;
+            // Añadir eventos
+            nodeElement.addEventListener('click', () => handleNodeClick(node));
+            nodeElement.addEventListener('mouseenter', (e) => showNodeTooltip(node, e));
+            nodeElement.addEventListener('mouseleave', hideNodeTooltip);
+            
+            treeContainer.appendChild(nodeElement);
+            
+            return nodeElement;
+        }
+
+        // Renderizar nodos recursivamente
+        function renderTreeNodes(node, parentX, parentY, level, availableWidth) {
+            if (!node.children || node.children.length === 0) return;
+            
+            const childCount = node.children.length;
+            const levelSpacing = 120;
+            const nodeSpacing = Math.min(220, availableWidth / childCount);
+            
+            // Calcular posición inicial para distribuir hijos
+            const startX = parentX - ((childCount - 1) * nodeSpacing) / 2;
+            
+            node.children.forEach((child, index) => {
+                const childX = startX + (index * nodeSpacing);
+                const childY = parentY + levelSpacing;
+                
+                createTreeNode(child, childX, childY);
+                
+                // Dibujar conector
+                drawConnector(parentX, parentY, childX, childY);
+                
+                // Renderizar hijos recursivamente
+                renderTreeNodes(child, childX, childY, level + 1, nodeSpacing);
+            });
+        }
+
+        // Dibujar conector entre nodos
+        function drawConnector(fromX, fromY, toX, toY) {
+            // Calcular puntos
+            const startX = fromX + 100;
+            const startY = fromY + 50;
+            const endX = toX + 100;
+            const endY = toY;
+            
+            // Crear línea vertical desde el nodo padre
+            const verticalLine = document.createElement('div');
+            verticalLine.className = 'tree-connector vertical';
+            verticalLine.style.left = ${startX}px;
+            verticalLine.style.top = ${startY}px;
+            verticalLine.style.height = ${Math.abs(endY - startY)}px;
+            verticalLine.style.width = '3px';
+            
+            // Crear línea horizontal hacia el nodo hijo
+            const horizontalLine = document.createElement('div');
+            horizontalLine.className = 'tree-connector horizontal';
+            horizontalLine.style.left = ${Math.min(startX, endX)}px;
+            horizontalLine.style.top = ${endY}px;
+            horizontalLine.style.width = ${Math.abs(endX - startX)}px;
+            horizontalLine.style.height = '3px';
+            
+            treeContainer.appendChild(verticalLine);
+            treeContainer.appendChild(horizontalLine);
+        }
+
+        // Manejar clic en nodo
+        function handleNodeClick(node) {
+            if (!isDecisionActive && node.type !== "root") {
+                showMessage("Primero inicia una decisión con el botón 'Iniciar Decisión'");
+                return;
             }
             
-            // Actualizar lista de factores
-            factorList.innerHTML = '';
-            results.factors.forEach(factor => {
-                const li = document.createElement('li');
-                const impactPercent = Math.round(factor.impact * 100);
-                
-                li.innerHTML = `
-                    <div>
-                        <strong>${factor.name}:</strong> ${factor.value}<br>
-                        <small>${factor.description}</small>
-                    </div>
-                    <div>
-                        <strong class="${impactPercent > 0 ? 'factor-positive' : impactPercent < 0 ? 'factor-negative' : 'factor-neutral'}">
-                            ${impactPercent > 0 ? '+' : ''}${impactPercent}%
-                        </strong>
+            if (node.type === "root" && !isDecisionActive) {
+                showMessage("Haz clic en 'Iniciar Decisión' para comenzar");
+                return;
+            }
+            
+            // Si no es una opción o resultado, no hacer nada
+            if (node.type !== "option" && node.type !== "result") return;
+            
+            // Añadir al camino
+            currentPath.push({
+                id: node.id,
+                name: node.name,
+                description: node.description,
+                type: node.type
+            });
+            
+            // Actualizar nodo actual
+            currentNode = node;
+            
+            // Resaltar camino
+            highlightPath();
+            
+            // Actualizar interfaz
+            updateDecisionPath();
+            updateCurrentDecision();
+            updateStats();
+            
+            // Si es resultado, finalizar decisión
+            if (node.type === "result") {
+                isDecisionActive = false;
+                showMessage(¡Decisión completada! Resultado: ${node.name}. Riesgo: ${node.risk}, Éxito: ${node.success});
+            }
+        }
+
+        // Resaltar camino actual
+        function highlightPath() {
+            // Remover resaltado previo
+            document.querySelectorAll('.tree-node.active').forEach(node => {
+                node.classList.remove('active');
+            });
+            
+            // Resaltar nodos en el camino
+            currentPath.forEach(step => {
+                const nodeElement = document.getElementById(node-${step.id});
+                if (nodeElement) {
+                    nodeElement.classList.add('active');
+                }
+            });
+            
+            // También resaltar nodo raíz si hay camino
+            if (currentPath.length > 0) {
+                const rootElement = document.getElementById('node-root');
+                if (rootElement) {
+                    rootElement.classList.add('active');
+                }
+            }
+        }
+
+        // Mostrar tooltip para nodo
+        function showNodeTooltip(node, event) {
+            let tooltipContent = <strong>${node.name}</strong><br/>${node.description};
+            
+            if (node.type === "result") {
+                tooltipContent += <br/><br/><strong>Riesgo:</strong> ${node.risk}<br/><strong>Probabilidad de éxito:</strong> ${node.success};
+            }
+            
+            nodeTooltip.innerHTML = tooltipContent;
+            nodeTooltip.style.display = 'block';
+            nodeTooltip.style.left = ${event.pageX + 10}px;
+            nodeTooltip.style.top = ${event.pageY - 28}px;
+        }
+
+        function hideNodeTooltip() {
+            nodeTooltip.style.display = 'none';
+        }
+
+        // Actualizar camino de decisión en la interfaz
+        function updateDecisionPath() {
+            const pathContainer = document.getElementById("decisionPath");
+            
+            if (currentPath.length === 0) {
+                pathContainer.innerHTML = `
+                    <div class="path-step">
+                        <div class="step-number">?</div>
+                        <div class="step-content">
+                            <div class="step-question">Sin decisiones tomadas aún</div>
+                            <div class="step-choice">Selecciona una opción en el árbol para comenzar</div>
+                        </div>
                     </div>
                 `;
-                factorList.appendChild(li);
+                return;
+            }
+            
+            let pathHTML = "";
+            
+            currentPath.forEach((step, index) => {
+                pathHTML += `
+                    <div class="path-step">
+                        <div class="step-number">${index + 1}</div>
+                        <div class="step-content">
+                            <div class="step-question">${step.name}</div>
+                            <div class="step-choice">${step.description}</div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            pathContainer.innerHTML = pathHTML;
+            pathContainer.scrollTop = pathContainer.scrollHeight;
+        }
+
+        // Actualizar decisión actual
+        function updateCurrentDecision() {
+            const currentDecisionElement = document.getElementById("currentDecision");
+            
+            if (!isDecisionActive) {
+                currentDecisionElement.innerHTML = `
+                    <div class="decision-text">
+                        <i class="fas fa-info-circle"></i> 
+                        <strong>Estado:</strong> Esperando inicio de decisión. Haz clic en "Iniciar Decisión" para comenzar.
+                    </div>
+                `;
+                return;
+            }
+            
+            if (currentPath.length === 0) {
+                currentDecisionElement.innerHTML = `
+                    <div class="decision-text">
+                        <i class="fas fa-play-circle"></i> 
+                        <strong>Decisión iniciada:</strong> Selecciona tu primer paso en el árbol de decisiones.
+                    </div>
+                `;
+                return;
+            }
+            
+            const lastStep = currentPath[currentPath.length - 1];
+            
+            if (lastStep.type === "result") {
+                currentDecisionElement.innerHTML = `
+                    <div class="decision-text">
+                        <i class="fas fa-flag-checkered"></i> 
+                        <strong>Decisión completada:</strong> Has llegado al resultado final: 
+                        <span class="result-text">"${lastStep.name}"</span>
+                    </div>
+                `;
+            } else {
+                currentDecisionElement.innerHTML = `
+                    <div class="decision-text">
+                        <i class="fas fa-question-circle"></i> 
+                        <strong>Paso actual:</strong> "${lastStep.name}". 
+                        <strong>Descripción:</strong> ${lastStep.description}
+                    </div>
+                `;
+            }
+        }
+
+        // Actualizar estadísticas
+        function updateStats() {
+            document.getElementById('decisionStep').textContent = currentPath.length;
+        }
+
+        // Mostrar mensaje
+        function showMessage(message) {
+            alert(message);
+        }
+
+        // Iniciar decisión
+        function startDecision() {
+            isDecisionActive = true;
+            currentPath = [];
+            currentNode = null;
+            updateDecisionPath();
+            updateCurrentDecision();
+            updateStats();
+            
+            // Remover resaltado previo
+            document.querySelectorAll('.tree-node.active').forEach(node => {
+                node.classList.remove('active');
+            });
+            
+            showMessage("¡Decisión iniciada! Ahora puedes seleccionar opciones en el árbol.");
+        }
+
+        // Reiniciar todo
+        function resetDecision() {
+            isDecisionActive = false;
+            currentPath = [];
+            currentNode = null;
+            updateDecisionPath();
+            updateCurrentDecision();
+            updateStats();
+            
+            // Remover resaltado
+            document.querySelectorAll('.tree-node.active').forEach(node => {
+                node.classList.remove('active');
             });
         }
-        
-        // Función para manejar el envío del formulario
-        document.getElementById('passengerForm').addEventListener('submit', function(event) {
-            event.preventDefault();
+
+        // Recorrido automático
+        function autoTraverse() {
+            resetDecision();
+            startDecision();
             
-            // Obtener datos del formulario
-            const passengerData = {
-                pclass: document.getElementById('pclass').value,
-                sex: document.getElementById('sex').value,
-                age: parseInt(document.getElementById('age').value),
-                sibsp: parseInt(document.getElementById('sibsp').value),
-                parch: parseInt(document.getElementById('parch').value),
-                fare: parseFloat(document.getElementById('fare').value),
-                embarked: document.getElementById('embarked').value
-            };
-            
-            // Calcular probabilidad
-            const results = calculateSurvivalProbability(passengerData);
-            
-            // Actualizar la interfaz
-            updateResults(passengerData, results);
-        });
-        
-        // Función para cargar datos de ejemplo
-        function loadExample(exampleNumber) {
-            const examples = [
-                {pclass: "1", sex: "female", age: 29, sibsp: 0, parch: 0, fare: 211.34, embarked: "C"},
-                {pclass: "3", sex: "male", age: 25, sibsp: 0, parch: 0, fare: 7.05, embarked: "S"},
-                {pclass: "2", sex: "male", age: 32, sibsp: 1, parch: 0, fare: 26, embarked: "S"},
-                {pclass: "1", sex: "male", age: 48, sibsp: 1, parch: 2, fare: 120, embarked: "S"},
-                {pclass: "3", sex: "female", age: 18, sibsp: 2, parch: 2, fare: 34.38, embarked: "S"}
-            ];
-            
-            const example = examples[exampleNumber];
-            
-            document.getElementById('pclass').value = example.pclass;
-            document.getElementById('sex').value = example.sex;
-            document.getElementById('age').value = example.age;
-            document.getElementById('sibsp').value = example.sibsp;
-            document.getElementById('parch').value = example.parch;
-            document.getElementById('fare').value = example.fare;
-            document.getElementById('embarked').value = example.embarked;
-            
-            // Calcular automáticamente
-            const results = calculateSurvivalProbability(example);
-            updateResults(example, results);
+            // Simular un camino predeterminado
+            setTimeout(() => {
+                // Seleccionar Enfoque Ágil
+                simulateClick('agile');
+                
+                setTimeout(() => {
+                    // Seleccionar Equipo Pequeño
+                    simulateClick('team_small');
+                    
+                    setTimeout(() => {
+                        // Seleccionar Sprints Cortos
+                        simulateClick('sprints_short');
+                        
+                        setTimeout(() => {
+                            // Seleccionar resultado final
+                            simulateClick('result1');
+                        }, 800);
+                    }, 800);
+                }, 800);
+            }, 500);
         }
-        
-        // Inicializar con un ejemplo
-        window.addEventListener('DOMContentLoaded', function() {
-            loadExample(0);
+
+        // Simular clic en un nodo
+        function simulateClick(nodeId) {
+            const node = findNodeById(decisionTree, nodeId);
+            if (node) {
+                handleNodeClick(node);
+            }
+        }
+
+        // Buscar nodo por ID
+        function findNodeById(tree, id) {
+            if (tree.id === id) return tree;
             
-            // Agregar botones de ejemplo al formulario
-            const form = document.querySelector('.prediction-form');
-            const exampleDiv = document.createElement('div');
-            exampleDiv.className = 'form-group';
-            exampleDiv.innerHTML = `
-                <label>Ejemplos rápidos:</label>
-                <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px;">
-                    <button type="button" onclick="loadExample(0)" style="padding: 8px 12px; background: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer;">Mujer 1ra Clase</button>
-                    <button type="button" onclick="loadExample(1)" style="padding: 8px 12px; background: #f44336; color: white; border: none; border-radius: 5px; cursor: pointer;">Hombre 3ra Clase</button>
-                    <button type="button" onclick="loadExample(2)" style="padding: 8px 12px; background: #FF9800; color: white; border: none; border-radius: 5px; cursor: pointer;">Hombre 2da Clase</button>
-                </div>
-            `;
-            form.insertBefore(exampleDiv, form.querySelector('.btn'));
+            if (tree.children) {
+                for (let child of tree.children) {
+                    const found = findNodeById(child, id);
+                    if (found) return found;
+                }
+            }
+            
+            return null;
+        }
+
+        // Ejemplos de caminos
+        function example1() {
+            resetDecision();
+            startDecision();
+            
+            setTimeout(() => {
+                simulateClick('agile');
+                setTimeout(() => {
+                    simulateClick('team_small');
+                    setTimeout(() => {
+                        simulateClick('sprints_short');
+                        setTimeout(() => {
+                            simulateClick('result1');
+                        }, 600);
+                    }, 600);
+                }, 600);
+            }, 500);
+        }
+
+        function example2() {
+            resetDecision();
+            startDecision();
+            
+            setTimeout(() => {
+                simulateClick('agile');
+                setTimeout(() => {
+                    simulateClick('team_large');
+                    setTimeout(() => {
+                        simulateClick('hybrid');
+                        setTimeout(() => {
+                            simulateClick('result4');
+                        }, 600);
+                    }, 600);
+                }, 600);
+            }, 500);
+        }
+
+        function example3() {
+            resetDecision();
+            startDecision();
+            
+            setTimeout(() => {
+                simulateClick('traditional');
+                setTimeout(() => {
+                    simulateClick('detailed');
+                    setTimeout(() => {
+                        simulateClick('flexible');
+                        setTimeout(() => {
+                            simulateClick('result6');
+                        }, 600);
+                    }, 600);
+                }, 600);
+            }, 500);
+        }
+
+        // Configurar eventos
+        startBtn.addEventListener('click', startDecision);
+        resetBtn.addEventListener('click', resetDecision);
+        autoBtn.addEventListener('click', autoTraverse);
+        example1Btn.addEventListener('click', example1);
+        example2Btn.addEventListener('click', example2);
+        example3Btn.addEventListener('click', example3);
+        
+        zoomInBtn.addEventListener('click', () => {
+            treeContainer.style.transform = scale(${1.2});
         });
+        
+        zoomOutBtn.addEventListener('click', () => {
+            treeContainer.style.transform = scale(${0.8});
+        });
+        
+        centerBtn.addEventListener('click', () => {
+            treeContainer.style.transform = 'scale(1)';
+            treeContainer.scrollLeft = treeContainer.scrollWidth / 2 - treeContainer.clientWidth / 2;
+        });
+
+        // Inicializar cuando la página cargue
+        window.addEventListener('load', initTree);
     </script>
 </body>
 </html>
