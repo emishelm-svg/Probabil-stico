@@ -2,96 +2,275 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Titanic Decision Tree - Fix</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Titanic Decision Tree - Standalone</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <style>
-        :root { --bg: #0f172a; --accent: #38bdf8; }
-        body { font-family: sans-serif; display: flex; height: 100vh; margin: 0; background: #f1f5f9; }
-        #sidebar { width: 300px; background: var(--bg); color: white; padding: 20px; }
-        #canvas { flex-grow: 1; position: relative; }
-        .btn { background: var(--accent); color: #000; border: none; padding: 10px; cursor: pointer; width: 100%; border-radius: 5px; font-weight: bold; }
-        .error-msg { color: #f87171; font-size: 12px; margin-top: 10px; display: none; }
-        input[type="file"] { margin: 10px 0; color: white; font-size: 12px; }
+        :root {
+            --sidebar-bg: #0f172a;
+            --main-bg: #1e293b;
+            --accent: #38bdf8;
+            --text: #f1f5f9;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            background-color: var(--main-bg);
+            color: var(--text);
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        #sidebar {
+            width: 320px;
+            background-color: var(--sidebar-bg);
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .logo-area {
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+
+        .control-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
+
+        select, button {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            font-size: 14px;
+            outline: none;
+        }
+
+        button {
+            background: var(--accent);
+            color: var(--sidebar-bg);
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            filter: brightness(1.1);
+            transform: translateY(-1px);
+        }
+
+        /* Main View */
+        #viewport {
+            flex-grow: 1;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            padding: 20px 40px;
+            background: rgba(15, 23, 42, 0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #tree-canvas {
+            flex-grow: 1;
+            cursor: grab;
+        }
+
+        /* D3 Styles */
+        .node circle {
+            fill: #0f172a;
+            stroke: var(--accent);
+            stroke-width: 2px;
+        }
+
+        .node text {
+            fill: white;
+            font-size: 12px;
+            pointer-events: none;
+        }
+
+        .link {
+            fill: none;
+            stroke: rgba(255,255,255,0.2);
+            stroke-width: 2px;
+        }
+
+        .badge {
+            background: rgba(56, 189, 248, 0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: var(--accent);
+        }
     </style>
 </head>
 <body>
 
-<div id="sidebar">
-    <h2>Titanic Lab</h2>
-    <p>Si el archivo automático falla, selecciona el CSV manualmente:</p>
-    <input type="file" id="csvInput" accept=".csv">
-    <hr>
-    <button class="btn" onclick="tryLoadAuto()">Reintentar Carga Auto</button>
-    <div id="errorLog" class="error-msg">Error: No se encontró el archivo en el repo.</div>
-</div>
+<aside id="sidebar">
+    <div class="logo-area">
+        <h2 style="margin:0">Titanic <span style="font-weight:300">Lab</span></h2>
+        <p style="font-size: 12px; opacity: 0.6;">Árbol de Decisión Predictivo</p>
+    </div>
 
-<div id="canvas">
-    <h3 style="padding-left: 20px;">Árbol de Decisión Generado</h3>
-    <div id="tree"></div>
-</div>
+    <div class="control-group">
+        <label>Variable Raíz</label>
+        <select id="rootVar">
+            <option value="Sex">Género (Sex)</option>
+            <option value="Pclass">Clase (Pclass)</option>
+            <option value="Embarked">Puerto (Embarked)</option>
+        </select>
+    </div>
+
+    <div class="control-group">
+        <label>Modo de Análisis</label>
+        <select id="mode">
+            <option value="survive">Tasa de Supervivencia</option>
+            <option value="count">Distribución de Pasajeros</option>
+        </select>
+    </div>
+
+    <button onclick="updateTree()">REGENERAR MODELO</button>
+
+    <div style="margin-top: auto; font-size: 11px; opacity: 0.4;">
+        Datos integrados: 891 registros<br>
+        Framework: D3.js v7
+    </div>
+</aside>
+
+<main id="viewport">
+    <header>
+        <div>
+            <h4 style="margin:0">Visualizador Jerárquico</h4>
+            <span id="sub-label" style="font-size:12px; opacity:0.7;">Análisis basado en Survived</span>
+        </div>
+        <div class="badge">Datos Embebidos Activos</div>
+    </header>
+    <div id="tree-canvas"></div>
+</main>
 
 <script>
-    // 1. Carga automática al iniciar
-    window.onload = () => tryLoadAuto();
-
-    // 2. Carga desde el input manual (por si falla el repo)
-    document.getElementById('csvInput').onchange = function(e) {
-        const file = e.target.files[0];
-        Papa.parse(file, {
-            header: true,
-            dynamicTyping: true,
-            complete: (results) => processAndRender(results.data)
-        });
+    // DATOS TRANSCRITOS (Resumen estadístico del CSV para el árbol)
+    const titanicStats = {
+        total: 891,
+        survived: 342,
+        dead: 549,
+        bySex: {
+            female: { total: 314, survived: 233, dead: 81 },
+            male: { total: 577, survived: 109, dead: 468 }
+        },
+        byClass: {
+            p1: { total: 216, survived: 136, dead: 80 },
+            p2: { total: 184, survived: 87, dead: 97 },
+            p3: { total: 491, survived: 119, dead: 372 }
+        }
     };
 
-    function tryLoadAuto() {
-        document.getElementById('errorLog').style.display = 'none';
-        Papa.parse("Titanic-Dataset.csv", {
-            download: true,
-            header: true,
-            dynamicTyping: true,
-            complete: function(results) {
-                processAndRender(results.data);
-            },
-            error: function() {
-                document.getElementById('errorLog').style.display = 'block';
-                console.error("No se pudo cargar automáticamente.");
-            }
-        });
+    function generateTreeStructure(rootVar) {
+        if (rootVar === 'Sex') {
+            return {
+                name: "Pasajeros (891)",
+                children: [
+                    {
+                        name: "Mujeres (314)",
+                        children: [
+                            { name: "Sobreviven: 233 (74%)", val: 74 },
+                            { name: "Fallecen: 81 (26%)", val: 26 }
+                        ]
+                    },
+                    {
+                        name: "Hombres (577)",
+                        children: [
+                            { name: "Sobreviven: 109 (19%)", val: 19 },
+                            { name: "Fallecen: 468 (81%)", val: 81 }
+                        ]
+                    }
+                ]
+            };
+        } else {
+            return {
+                name: "Pasajeros (891)",
+                children: [
+                    { name: "Clase 1 (216)", children: [{name: "Sobrevive: 63%"}] },
+                    { name: "Clase 2 (184)", children: [{name: "Sobrevive: 47%"}] },
+                    { name: "Clase 3 (491)", children: [{name: "Sobrevive: 24%"}] }
+                ]
+            };
+        }
     }
 
-    function processAndRender(data) {
-        console.log("Datos cargados:", data.length);
-        // Aquí va la lógica de dibujo D3 que enviamos antes
-        const sampleTree = {
-            name: "Total: " + data.length,
-            children: [
-                { name: "Mujeres: Sobreviven", children: [{name: "80%"}] },
-                { name: "Hombres: Fallecen", children: [{name: "20%"}] }
-            ]
-        };
-        renderD3(sampleTree);
+    function updateTree() {
+        const rootVar = document.getElementById('rootVar').value;
+        const data = generateTreeStructure(rootVar);
+        drawTree(data);
     }
 
-    function renderD3(treeData) {
-        d3.select("#tree").selectAll("*").remove();
-        const width = 600, height = 400;
-        const svg = d3.select("#tree").append("svg").attr("width", width).attr("height", height)
-                      .append("g").attr("transform", "translate(50,50)");
+    function drawTree(treeData) {
+        d3.select("#tree-canvas").selectAll("*").remove();
         
-        const treeLayout = d3.tree().size([height-100, width-200]);
+        const container = document.getElementById("tree-canvas");
+        const width = container.clientWidth;
+        const height = container.clientHeight;
+
+        const svg = d3.select("#tree-canvas").append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .append("g")
+            .attr("transform", "translate(100,0)");
+
+        const treeLayout = d3.tree().size([height - 100, width - 350]);
         const root = d3.hierarchy(treeData);
         treeLayout(root);
 
-        svg.selectAll(".link").data(root.links()).enter().append("path").attr("fill", "none").attr("stroke", "#ccc")
-           .attr("d", d3.linkHorizontal().x(d => d.y).y(d => d.x));
+        // Enlaces (Links)
+        svg.selectAll(".link")
+            .data(root.links())
+            .enter().append("path")
+            .attr("class", "link")
+            .attr("d", d3.linkHorizontal().x(d => d.y).y(d => d.x));
 
-        const node = svg.selectAll(".node").data(root.descendants()).enter().append("g")
-                        .attr("transform", d => `translate(${d.y},${d.x})`);
-        node.append("circle").attr("r", 5).attr("fill", "#38bdf8");
-        node.append("text").attr("dy", 15).text(d => d.data.name).style("font-size", "10px");
+        // Nodos
+        const node = svg.selectAll(".node")
+            .data(root.descendants())
+            .enter().append("g")
+            .attr("class", "node")
+            .attr("transform", d => `translate(${d.y},${d.x})`);
+
+        node.append("circle").attr("r", 6);
+
+        node.append("text")
+            .attr("dy", "-10")
+            .attr("x", d => d.children ? -10 : 10)
+            .style("text-anchor", d => d.children ? "end" : "start")
+            .text(d => d.data.name);
     }
+
+    // Inicializar
+    window.onload = updateTree;
+    window.onresize = updateTree;
 </script>
+
 </body>
 </html>
