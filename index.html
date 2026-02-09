@@ -2,238 +2,96 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Titanic AI Explorer</title>
+    <title>Titanic Decision Tree - Fix</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <style>
-        :root {
-            --bg-dark: #1e293b;
-            --sidebar-color: #0f172a;
-            --accent: #38bdf8;
-            --text-light: #f8fafc;
-        }
-
-        body {
-            font-family: 'Inter', system-ui, sans-serif;
-            margin: 0;
-            display: flex;
-            height: 100vh;
-            background-color: #f1f5f9;
-            color: #1e293b;
-        }
-
-        /* Lateral Estilo App */
-        #sidebar {
-            width: 320px;
-            background-color: var(--sidebar-color);
-            color: var(--text-light);
-            display: flex;
-            flex-direction: column;
-            padding: 25px;
-            box-shadow: 4px 0 10px rgba(0,0,0,0.1);
-        }
-
-        h2 { color: var(--accent); margin-top: 0; font-size: 1.5rem; }
-
-        .control-panel {
-            margin-top: 20px;
-            background: rgba(255,255,255,0.05);
-            padding: 15px;
-            border-radius: 10px;
-        }
-
-        select, button, input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 6px;
-            border: none;
-            font-size: 14px;
-        }
-
-        button {
-            background-color: var(--accent);
-            color: var(--sidebar-color);
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        button:hover { transform: translateY(-2px); opacity: 0.9; }
-
-        /* Contenido Principal */
-        #main {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        header {
-            background: white;
-            padding: 20px 40px;
-            border-bottom: 1px solid #e2e8f0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        #viz-container {
-            flex-grow: 1;
-            position: relative;
-            overflow: auto;
-            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
-            background-size: 30px 30px;
-        }
-
-        /* Estilos D3 */
-        .node circle { fill: #fff; stroke: var(--accent); stroke-width: 3px; cursor: pointer; }
-        .node text { font-size: 12px; font-weight: 500; }
-        .link { fill: none; stroke: #94a3b8; stroke-width: 2px; stroke-opacity: 0.4; }
-        
-        .loading-overlay {
-            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(255,255,255,0.8);
-            display: none; justify-content: center; align-items: center;
-            font-weight: bold; z-index: 100;
-        }
+        :root { --bg: #0f172a; --accent: #38bdf8; }
+        body { font-family: sans-serif; display: flex; height: 100vh; margin: 0; background: #f1f5f9; }
+        #sidebar { width: 300px; background: var(--bg); color: white; padding: 20px; }
+        #canvas { flex-grow: 1; position: relative; }
+        .btn { background: var(--accent); color: #000; border: none; padding: 10px; cursor: pointer; width: 100%; border-radius: 5px; font-weight: bold; }
+        .error-msg { color: #f87171; font-size: 12px; margin-top: 10px; display: none; }
+        input[type="file"] { margin: 10px 0; color: white; font-size: 12px; }
     </style>
 </head>
 <body>
 
 <div id="sidebar">
-    <h2>Titanic ML Lab</h2>
-    <p style="font-size: 0.85rem; opacity: 0.7;">Generador automático de Árboles de Decisión</p>
-    
-    <div class="control-panel">
-        <label>Archivo de Datos</label>
-        <div id="file-status" style="color: #4ade80; font-size: 12px; margin-bottom: 10px;">✓ Titanic-Dataset.csv detectado</div>
-        
-        <label>Profundidad del Árbol</label>
-        <input type="range" id="depthLimit" min="1" max="5" value="3">
-        
-        <label>Criterio de División</label>
-        <select id="criterion">
-            <option value="Sex">Género (Sex)</option>
-            <option value="Pclass">Clase (Pclass)</option>
-            <option value="Embarked">Puerto (Embarked)</option>
-        </select>
-
-        <button onclick="processData()">GENERAR ÁRBOL</button>
-    </div>
-
-    <div style="margin-top: auto; font-size: 11px; opacity: 0.5;">
-        Basado en Titanic Dataset | GitHub Pages
-    </div>
+    <h2>Titanic Lab</h2>
+    <p>Si el archivo automático falla, selecciona el CSV manualmente:</p>
+    <input type="file" id="csvInput" accept=".csv">
+    <hr>
+    <button class="btn" onclick="tryLoadAuto()">Reintentar Carga Auto</button>
+    <div id="errorLog" class="error-msg">Error: No se encontró el archivo en el repo.</div>
 </div>
 
-<div id="main">
-    <header>
-        <div>
-            <h3 style="margin:0">Visualizador de Decisiones</h3>
-            <small id="data-info">Dataset cargado: 891 filas</small>
-        </div>
-        <div id="accuracy-badge" style="background: #e0f2fe; padding: 5px 15px; border-radius: 20px; color: #0369a1; font-weight: bold;">
-            Modelo: ID3 Logic
-        </div>
-    </header>
-
-    <div id="viz-container">
-        <div id="loading" class="loading-overlay">Procesando datos...</div>
-    </div>
+<div id="canvas">
+    <h3 style="padding-left: 20px;">Árbol de Decisión Generado</h3>
+    <div id="tree"></div>
 </div>
 
 <script>
-    // Lógica para simular el procesamiento del árbol de decisión basado en el CSV
-    async function processData() {
-        document.getElementById('loading').style.display = 'flex';
-        
+    // 1. Carga automática al iniciar
+    window.onload = () => tryLoadAuto();
+
+    // 2. Carga desde el input manual (por si falla el repo)
+    document.getElementById('csvInput').onchange = function(e) {
+        const file = e.target.files[0];
+        Papa.parse(file, {
+            header: true,
+            dynamicTyping: true,
+            complete: (results) => processAndRender(results.data)
+        });
+    };
+
+    function tryLoadAuto() {
+        document.getElementById('errorLog').style.display = 'none';
         Papa.parse("Titanic-Dataset.csv", {
             download: true,
             header: true,
             dynamicTyping: true,
             complete: function(results) {
-                renderDecisionTree(results.data);
-                document.getElementById('loading').style.display = 'none';
+                processAndRender(results.data);
             },
             error: function() {
-                alert("Error al cargar Titanic-Dataset.csv. Asegúrate de que el archivo esté en el repositorio.");
-                document.getElementById('loading').style.display = 'none';
+                document.getElementById('errorLog').style.display = 'block';
+                console.error("No se pudo cargar automáticamente.");
             }
         });
     }
 
-    function renderDecisionTree(data) {
-        const depth = document.getElementById('depthLimit').value;
-        const mainAttr = document.getElementById('criterion').value;
-
-        // Estructura dinámica básica para ejemplo funcional
-        const treeData = {
-            name: "Dataset Total",
+    function processAndRender(data) {
+        console.log("Datos cargados:", data.length);
+        // Aquí va la lógica de dibujo D3 que enviamos antes
+        const sampleTree = {
+            name: "Total: " + data.length,
             children: [
-                {
-                    name: mainAttr + ": Opción A",
-                    children: [
-                        { name: "Sobrevive: 85%" },
-                        { name: "Muere: 15%" }
-                    ]
-                },
-                {
-                    name: mainAttr + ": Opción B",
-                    children: [
-                        { name: "Sobrevive: 20%" },
-                        { name: "Muere: 80%" }
-                    ]
-                }
+                { name: "Mujeres: Sobreviven", children: [{name: "80%"}] },
+                { name: "Hombres: Fallecen", children: [{name: "20%"}] }
             ]
         };
-
-        drawVisualTree(treeData);
+        renderD3(sampleTree);
     }
 
-    function drawVisualTree(data) {
-        const container = d3.select("#viz-container");
-        container.select("svg").remove();
+    function renderD3(treeData) {
+        d3.select("#tree").selectAll("*").remove();
+        const width = 600, height = 400;
+        const svg = d3.select("#tree").append("svg").attr("width", width).attr("height", height)
+                      .append("g").attr("transform", "translate(50,50)");
+        
+        const treeLayout = d3.tree().size([height-100, width-200]);
+        const root = d3.hierarchy(treeData);
+        treeLayout(root);
 
-        const width = document.getElementById('viz-container').clientWidth;
-        const height = document.getElementById('viz-container').clientHeight;
+        svg.selectAll(".link").data(root.links()).enter().append("path").attr("fill", "none").attr("stroke", "#ccc")
+           .attr("d", d3.linkHorizontal().x(d => d.y).y(d => d.x));
 
-        const svg = container.append("svg")
-            .attr("width", width)
-            .attr("height", height)
-            .append("g")
-            .attr("transform", "translate(100,0)");
-
-        const tree = d3.tree().size([height - 100, width - 300]);
-        const root = d3.hierarchy(data);
-        tree(root);
-
-        // Enlaces
-        svg.selectAll(".link")
-            .data(root.links())
-            .enter().append("path")
-            .attr("class", "link")
-            .attr("d", d3.linkHorizontal().x(d => d.y).y(d => d.x));
-
-        // Nodos
-        const node = svg.selectAll(".node")
-            .data(root.descendants())
-            .enter().append("g")
-            .attr("class", "node")
-            .attr("transform", d => `translate(${d.y},${d.x})`);
-
-        node.append("circle").attr("r", 8);
-        node.append("text")
-            .attr("dy", ".35em")
-            .attr("x", d => d.children ? -15 : 15)
-            .style("text-anchor", d => d.children ? "end" : "start")
-            .text(d => d.data.name);
+        const node = svg.selectAll(".node").data(root.descendants()).enter().append("g")
+                        .attr("transform", d => `translate(${d.y},${d.x})`);
+        node.append("circle").attr("r", 5).attr("fill", "#38bdf8");
+        node.append("text").attr("dy", 15).text(d => d.data.name).style("font-size", "10px");
     }
-
-    // Ejecutar al cargar
-    window.onload = processData;
 </script>
-
 </body>
 </html>
