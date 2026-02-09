@@ -3,274 +3,1124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Titanic Decision Tree - Standalone</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+    <title>Árbol de Decisiones Ramificado</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --sidebar-bg: #0f172a;
-            --main-bg: #1e293b;
-            --accent: #38bdf8;
-            --text: #f1f5f9;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, sans-serif;
+        * {
             margin: 0;
-            display: flex;
-            height: 100vh;
-            background-color: var(--main-bg);
-            color: var(--text);
-            overflow: hidden;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
-        /* Sidebar */
-        #sidebar {
-            width: 320px;
-            background-color: var(--sidebar-bg);
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 25px 0;
+            margin-bottom: 30px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 2.8rem;
+        }
+        
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        @media (max-width: 1100px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .tree-section {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            position: relative;
+            overflow: hidden;
+            min-height: 700px;
+        }
+        
+        .tree-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(to right, #3498db, #2ecc71);
+        }
+        
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-size: 1.6rem;
+        }
+        
+        .section-title i {
+            color: #3498db;
+            font-size: 1.8rem;
+        }
+        
+        .tree-container {
+            width: 100%;
+            overflow: auto;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 10px;
+            min-height: 600px;
+            position: relative;
+        }
+        
+        .tree-wrapper {
+            width: 100%;
+            height: 600px;
+            position: relative;
+        }
+        
+        .controls-sidebar {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
             padding: 25px;
             display: flex;
             flex-direction: column;
-            border-right: 1px solid rgba(255,255,255,0.1);
+            gap: 25px;
         }
-
-        .logo-area {
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding-bottom: 20px;
-            margin-bottom: 20px;
-        }
-
-        .control-group {
-            margin-bottom: 25px;
-        }
-
-        label {
-            display: block;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--accent);
-            margin-bottom: 10px;
-        }
-
-        select, button {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            color: white;
-            font-size: 14px;
-            outline: none;
-        }
-
-        button {
-            background: var(--accent);
-            color: var(--sidebar-bg);
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 10px;
-            border: none;
-            transition: all 0.2s;
-        }
-
-        button:hover {
-            filter: brightness(1.1);
-            transform: translateY(-1px);
-        }
-
-        /* Main View */
-        #viewport {
-            flex-grow: 1;
-            position: relative;
+        
+        .controls-section {
             display: flex;
             flex-direction: column;
+            gap: 15px;
         }
-
-        header {
-            padding: 20px 40px;
-            background: rgba(15, 23, 42, 0.5);
+        
+        .controls-title {
+            color: #2c3e50;
+            font-size: 1.3rem;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        
+        .btn {
+            padding: 14px 20px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 1rem;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, #3498db, #2980b9);
+            color: white;
+            box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(52, 152, 219, 0.4);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(to right, #e74c3c, #c0392b);
+            color: white;
+            box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3);
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(231, 76, 60, 0.4);
+        }
+        
+        .btn-success {
+            background: linear-gradient(to right, #2ecc71, #27ae60);
+            color: white;
+            box-shadow: 0 4px 10px rgba(46, 204, 113, 0.3);
+        }
+        
+        .btn-success:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(46, 204, 113, 0.4);
+        }
+        
+        .btn-info {
+            background: linear-gradient(to right, #9b59b6, #8e44ad);
+            color: white;
+            box-shadow: 0 4px 10px rgba(155, 89, 182, 0.3);
+        }
+        
+        .btn-info:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(155, 89, 182, 0.4);
+        }
+        
+        .decision-path {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            margin-top: 20px;
+        }
+        
+        .path-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+        }
+        
+        .path-title i {
+            color: #3498db;
+        }
+        
+        .path-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        
+        .path-step {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            background: linear-gradient(to right, #f8f9fa, #e9ecef);
+            border-radius: 10px;
+            border-left: 5px solid #3498db;
+            transition: all 0.3s ease;
+        }
+        
+        .path-step:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .step-number {
+            background: #3498db;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .step-content {
+            flex-grow: 1;
+        }
+        
+        .step-question {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .step-choice {
+            color: #27ae60;
+            font-style: italic;
+        }
+        
+        .current-decision {
+            background: linear-gradient(to right, #e8f4fc, #d4e6f1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            border-left: 5px solid #2ecc71;
+        }
+        
+        .decision-text {
+            font-size: 1.1rem;
+            color: #2c3e50;
+        }
+        
+        .decision-text strong {
+            color: #3498db;
+        }
+        
+        .result-text {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #7f8c8d;
+            padding: 25px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            font-size: 0.95rem;
+        }
+        
+        /* Estilos para el árbol personalizado */
+        .tree-node {
+            position: absolute;
+            padding: 12px 18px;
+            border-radius: 10px;
+            width: 200px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+        
+        .tree-node:hover {
+            transform: scale(1.05);
+            z-index: 20;
+        }
+        
+        .tree-node.root {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: 3px solid #2980b9;
+        }
+        
+        .tree-node.option {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            border: 3px solid #27ae60;
+        }
+        
+        .tree-node.result {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            border: 3px solid #c0392b;
+        }
+        
+        .tree-node.active {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            border-color: #e67e22;
+            box-shadow: 0 0 0 5px rgba(243, 156, 18, 0.3);
+        }
+        
+        .node-title {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        
+        .node-desc {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+        
+        .tree-connector {
+            position: absolute;
+            background-color: #95a5a6;
+            z-index: 1;
+        }
+        
+        .tree-connector.horizontal {
+            height: 3px;
+        }
+        
+        .tree-connector.vertical {
+            width: 3px;
+        }
+        
+        .tree-connector.active {
+            background-color: #3498db;
+            box-shadow: 0 0 5px #3498db;
+        }
+        
+        .tree-stats {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
         }
-
-        #tree-canvas {
-            flex-grow: 1;
-            cursor: grab;
+        
+        .stat {
+            text-align: center;
+            flex: 1;
         }
-
-        /* D3 Styles */
-        .node circle {
-            fill: #0f172a;
-            stroke: var(--accent);
-            stroke-width: 2px;
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #3498db;
         }
-
-        .node text {
-            fill: white;
-            font-size: 12px;
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+        
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.85);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
             pointer-events: none;
-        }
-
-        .link {
-            fill: none;
-            stroke: rgba(255,255,255,0.2);
-            stroke-width: 2px;
-        }
-
-        .badge {
-            background: rgba(56, 189, 248, 0.2);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            color: var(--accent);
+            z-index: 100;
+            max-width: 300px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            display: none;
         }
     </style>
 </head>
 <body>
-
-<aside id="sidebar">
-    <div class="logo-area">
-        <h2 style="margin:0">Titanic <span style="font-weight:300">Lab</span></h2>
-        <p style="font-size: 12px; opacity: 0.6;">Árbol de Decisión Predictivo</p>
-    </div>
-
-    <div class="control-group">
-        <label>Variable Raíz</label>
-        <select id="rootVar">
-            <option value="Sex">Género (Sex)</option>
-            <option value="Pclass">Clase (Pclass)</option>
-            <option value="Embarked">Puerto (Embarked)</option>
-        </select>
-    </div>
-
-    <div class="control-group">
-        <label>Modo de Análisis</label>
-        <select id="mode">
-            <option value="survive">Tasa de Supervivencia</option>
-            <option value="count">Distribución de Pasajeros</option>
-        </select>
-    </div>
-
-    <button onclick="updateTree()">REGENERAR MODELO</button>
-
-    <div style="margin-top: auto; font-size: 11px; opacity: 0.4;">
-        Datos integrados: 891 registros<br>
-        Framework: D3.js v7
-    </div>
-</aside>
-
-<main id="viewport">
-    <header>
-        <div>
-            <h4 style="margin:0">Visualizador Jerárquico</h4>
-            <span id="sub-label" style="font-size:12px; opacity:0.7;">Análisis basado en Survived</span>
-        </div>
-        <div class="badge">Datos Embebidos Activos</div>
-    </header>
-    <div id="tree-canvas"></div>
-</main>
-
-<script>
-    // DATOS TRANSCRITOS (Resumen estadístico del CSV para el árbol)
-    const titanicStats = {
-        total: 891,
-        survived: 342,
-        dead: 549,
-        bySex: {
-            female: { total: 314, survived: 233, dead: 81 },
-            male: { total: 577, survived: 109, dead: 468 }
-        },
-        byClass: {
-            p1: { total: 216, survived: 136, dead: 80 },
-            p2: { total: 184, survived: 87, dead: 97 },
-            p3: { total: 491, survived: 119, dead: 372 }
-        }
-    };
-
-    function generateTreeStructure(rootVar) {
-        if (rootVar === 'Sex') {
-            return {
-                name: "Pasajeros (891)",
-                children: [
-                    {
-                        name: "Mujeres (314)",
-                        children: [
-                            { name: "Sobreviven: 233 (74%)", val: 74 },
-                            { name: "Fallecen: 81 (26%)", val: 26 }
-                        ]
-                    },
-                    {
-                        name: "Hombres (577)",
-                        children: [
-                            { name: "Sobreviven: 109 (19%)", val: 19 },
-                            { name: "Fallecen: 468 (81%)", val: 81 }
-                        ]
-                    }
-                ]
-            };
-        } else {
-            return {
-                name: "Pasajeros (891)",
-                children: [
-                    { name: "Clase 1 (216)", children: [{name: "Sobrevive: 63%"}] },
-                    { name: "Clase 2 (184)", children: [{name: "Sobrevive: 47%"}] },
-                    { name: "Clase 3 (491)", children: [{name: "Sobrevive: 24%"}] }
-                ]
-            };
-        }
-    }
-
-    function updateTree() {
-        const rootVar = document.getElementById('rootVar').value;
-        const data = generateTreeStructure(rootVar);
-        drawTree(data);
-    }
-
-    function drawTree(treeData) {
-        d3.select("#tree-canvas").selectAll("*").remove();
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-network-wired"></i> Árbol de Decisiones Ramificado</h1>
+            <p class="subtitle">Explora un modelo de árbol de decisiones complejo con múltiples ramas horizontales y visualización interactiva</p>
+        </header>
         
-        const container = document.getElementById("tree-canvas");
-        const width = container.clientWidth;
-        const height = container.clientHeight;
+        <div class="main-content">
+            <section class="tree-section">
+                <div class="section-title">
+                    <i class="fas fa-project-diagram"></i>
+                    <h2>Árbol de Decisiones: Planificación de Proyectos</h2>
+                </div>
+                
+                <div class="tree-container">
+                    <div class="tree-wrapper" id="treeVisualization">
+                        <!-- El árbol se generará aquí -->
+                    </div>
+                </div>
+                
+                <div class="tree-stats">
+                    <div class="stat">
+                        <div class="stat-value" id="nodeCount">21</div>
+                        <div class="stat-label">Nodos Totales</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="levelCount">4</div>
+                        <div class="stat-label">Niveles</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="pathCount">12</div>
+                        <div class="stat-label">Caminos Posibles</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value" id="decisionStep">0</div>
+                        <div class="stat-label">Paso Actual</div>
+                    </div>
+                </div>
+            </section>
+            
+            <aside class="controls-sidebar">
+                <div class="controls-section">
+                    <h3 class="controls-title"><i class="fas fa-cogs"></i> Controles</h3>
+                    <button class="btn btn-primary" id="startBtn">
+                        <i class="fas fa-play-circle"></i> Iniciar Decisión
+                    </button>
+                    <button class="btn btn-secondary" id="resetBtn">
+                        <i class="fas fa-redo-alt"></i> Reiniciar Todo
+                    </button>
+                    <button class="btn btn-success" id="autoBtn">
+                        <i class="fas fa-robot"></i> Recorrido Automático
+                    </button>
+                </div>
+                
+                <div class="controls-section">
+                    <h3 class="controls-title"><i class="fas fa-eye"></i> Vista</h3>
+                    <button class="btn btn-info" id="zoomInBtn">
+                        <i class="fas fa-search-plus"></i> Acercar
+                    </button>
+                    <button class="btn btn-info" id="zoomOutBtn">
+                        <i class="fas fa-search-minus"></i> Alejar
+                    </button>
+                    <button class="btn btn-info" id="centerBtn">
+                        <i class="fas fa-expand-arrows-alt"></i> Centrar Árbol
+                    </button>
+                </div>
+                
+                <div class="controls-section">
+                    <h3 class="controls-title"><i class="fas fa-bolt"></i> Ejemplos Rápidos</h3>
+                    <button class="btn btn-success" id="example1Btn">
+                        <i class="fas fa-chart-line"></i> Camino Exitoso
+                    </button>
+                    <button class="btn btn-secondary" id="example2Btn">
+                        <i class="fas fa-exclamation-triangle"></i> Camino Riesgoso
+                    </button>
+                    <button class="btn btn-primary" id="example3Btn">
+                        <i class="fas fa-balance-scale"></i> Camino Equilibrado
+                    </button>
+                </div>
+                
+                <div class="current-decision" id="currentDecision">
+                    <div class="decision-text">
+                        <i class="fas fa-info-circle"></i> 
+                        <strong>Estado:</strong> Esperando inicio de decisión. Haz clic en "Iniciar Decisión" para comenzar.
+                    </div>
+                </div>
+            </aside>
+        </div>
+        
+        <section class="decision-path">
+            <div class="path-title">
+                <i class="fas fa-road"></i>
+                <h3>Camino de Decisión Seleccionado</h3>
+            </div>
+            
+            <div class="path-container" id="decisionPath">
+                <div class="path-step">
+                    <div class="step-number">?</div>
+                    <div class="step-content">
+                        <div class="step-question">Sin decisiones tomadas aún</div>
+                        <div class="step-choice">Selecciona una opción en el árbol para comenzar</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <footer>
+            <p><strong>Árbol de Decisiones Ramificado</strong> &copy; 2023 - Visualización Interactiva</p>
+            <p>Este modelo representa un árbol de decisiones complejo para planificación de proyectos con múltiples ramificaciones horizontales.</p>
+        </footer>
+    </div>
 
-        const svg = d3.select("#tree-canvas").append("svg")
-            .attr("width", width)
-            .attr("height", height)
-            .append("g")
-            .attr("transform", "translate(100,0)");
+    <div class="tooltip" id="nodeTooltip"></div>
 
-        const treeLayout = d3.tree().size([height - 100, width - 350]);
-        const root = d3.hierarchy(treeData);
-        treeLayout(root);
+    <script>
+        // Estructura del árbol de decisiones
+        const decisionTree = {
+            id: "root",
+            name: "Inicio de Proyecto",
+            description: "Decide cómo abordar un nuevo proyecto empresarial",
+            type: "root",
+            children: [
+                {
+                    id: "agile",
+                    name: "Enfoque Ágil",
+                    description: "Metodología iterativa e incremental",
+                    type: "option",
+                    children: [
+                        {
+                            id: "team_small",
+                            name: "Equipo Pequeño",
+                            description: "Equipo de 3-5 personas",
+                            type: "option",
+                            children: [
+                                {
+                                    id: "sprints_short",
+                                    name: "Sprints Cortos",
+                                    description: "Iteraciones de 1-2 semanas",
+                                    type: "option",
+                                    children: [
+                                        {
+                                            id: "result1",
+                                            name: "Alta Adaptabilidad",
+                                            description: "Proyecto exitoso con capacidad de adaptación a cambios",
+                                            type: "result",
+                                            risk: "Bajo",
+                                            success: "Alto"
+                                        }
+                                    ]
+                                },
+                                {
+                                    id: "sprints_medium",
+                                    name: "Sprints Medios",
+                                    description: "Iteraciones de 3-4 semanas",
+                                    type: "option",
+                                    children: [
+                                        {
+                                            id: "result2",
+                                            name: "Resultado Estable",
+                                            description: "Proyecto entregado con funcionalidades sólidas",
+                                            type: "result",
+                                            risk: "Medio",
+                                            success: "Alto"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            id: "team_large",
+                            name: "Equipo Grande",
+                            description: "Equipo de 6-10 personas",
+                            type: "option",
+                            children: [
+                                {
+                                    id: "scaled",
+                                    name: "Agile Escalado",
+                                    description: "Framework SAFe o LeSS",
+                                    type: "option",
+                                    children: [
+                                        {
+                                            id: "result3",
+                                            name: "Complejidad Controlada",
+                                            description: "Proyecto complejo gestionado efectivamente",
+                                            type: "result",
+                                            risk: "Medio",
+                                            success: "Medio"
+                                        }
+                                    ]
+                                },
+                                {
+                                    id: "hybrid",
+                                    name: "Enfoque Híbrido",
+                                    description: "Combinación de metodologías",
+                                    type: "option",
+                                    children: [
+                                        {
+                                            id: "result4",
+                                            name: "Flexibilidad Moderada",
+                                            description: "Resultados variables dependiendo de la integración",
+                                            type: "result",
+                                            risk: "Alto",
+                                            success: "Medio"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    id: "traditional",
+                    name: "Enfoque Tradicional",
+                    description: "Metodología en cascada (Waterfall)",
+                    type: "option",
+                    children: [
+                        {
+                            id: "detailed",
+                            name: "Planificación Detallada",
+                            description: "Documentación exhaustiva antes de comenzar",
+                            type: "option",
+                            children: [
+                                {
+                                    id: "strict",
+                                    name: "Fases Estrictas",
+                                    description: "Secuencia lineal de fases",
+                                    type: "option",
+                                    children: [
+                                        {
+                                            id: "result5",
+                                            name: "Resultado Predecible",
+                                            description: "Proyecto entregado según lo planeado, pero sin flexibilidad",
+                                            type: "result",
+                                            risk: "Bajo",
+                                            success: "Medio"
+                                        }
+                                    ]
+                                },
+                                {
+                                    id: "flexible",
+                                    name: "Fases Flexibles",
+                                    description: "Alguna adaptación entre fases",
+                                    type: "option",
+                                    children: [
+                                        {
+                                            id: "result6",
+                                            name: "Control con Adaptación",
+                                            description: "Balance entre estructura y adaptabilidad",
+                                            type: "result",
+                                            risk: "Medio",
+                                            success: "Medio"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        };
 
-        // Enlaces (Links)
-        svg.selectAll(".link")
-            .data(root.links())
-            .enter().append("path")
-            .attr("class", "link")
-            .attr("d", d3.linkHorizontal().x(d => d.y).y(d => d.x));
+        // Variables de estado
+        let currentPath = [];
+        let isDecisionActive = false;
+        let currentNode = null;
 
-        // Nodos
-        const node = svg.selectAll(".node")
-            .data(root.descendants())
-            .enter().append("g")
-            .attr("class", "node")
-            .attr("transform", d => `translate(${d.y},${d.x})`);
+        // Elementos del DOM
+        const treeContainer = document.getElementById('treeVisualization');
+        const nodeTooltip = document.getElementById('nodeTooltip');
+        const startBtn = document.getElementById('startBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const autoBtn = document.getElementById('autoBtn');
+        const zoomInBtn = document.getElementById('zoomInBtn');
+        const zoomOutBtn = document.getElementById('zoomOutBtn');
+        const centerBtn = document.getElementById('centerBtn');
+        const example1Btn = document.getElementById('example1Btn');
+        const example2Btn = document.getElementById('example2Btn');
+        const example3Btn = document.getElementById('example3Btn');
 
-        node.append("circle").attr("r", 6);
+        // Inicializar el árbol
+        function initTree() {
+            // Limpiar el contenedor
+            treeContainer.innerHTML = '';
+            
+            // Calcular dimensiones
+            const containerWidth = treeContainer.clientWidth;
+            const containerHeight = treeContainer.clientHeight;
+            
+            // Posicionar nodo raíz
+            const rootX = containerWidth / 2;
+            const rootY = 80;
+            
+            // Crear nodo raíz
+            createTreeNode(decisionTree, rootX, rootY);
+            
+            // Renderizar recursivamente
+            renderTreeNodes(decisionTree, rootX, rootY, 0, containerWidth);
+        }
 
-        node.append("text")
-            .attr("dy", "-10")
-            .attr("x", d => d.children ? -10 : 10)
-            .style("text-anchor", d => d.children ? "end" : "start")
-            .text(d => d.data.name);
-    }
+        // Crear un nodo del árbol
+        function createTreeNode(node, x, y) {
+            const nodeElement = document.createElement('div');
+            nodeElement.className = tree-node ${node.type};
+            nodeElement.id = node-${node.id};
+            nodeElement.style.left = ${x}px;
+            nodeElement.style.top = ${y}px;
+            
+            nodeElement.innerHTML = `
+                <div class="node-title">${node.name}</div>
+                <div class="node-desc">${node.description}</div>
+            `;
+            
+            // Añadir eventos
+            nodeElement.addEventListener('click', () => handleNodeClick(node));
+            nodeElement.addEventListener('mouseenter', (e) => showNodeTooltip(node, e));
+            nodeElement.addEventListener('mouseleave', hideNodeTooltip);
+            
+            treeContainer.appendChild(nodeElement);
+            
+            return nodeElement;
+        }
 
-    // Inicializar
-    window.onload = updateTree;
-    window.onresize = updateTree;
-</script>
+        // Renderizar nodos recursivamente
+        function renderTreeNodes(node, parentX, parentY, level, availableWidth) {
+            if (!node.children || node.children.length === 0) return;
+            
+            const childCount = node.children.length;
+            const levelSpacing = 120;
+            const nodeSpacing = Math.min(220, availableWidth / childCount);
+            
+            // Calcular posición inicial para distribuir hijos
+            const startX = parentX - ((childCount - 1) * nodeSpacing) / 2;
+            
+            node.children.forEach((child, index) => {
+                const childX = startX + (index * nodeSpacing);
+                const childY = parentY + levelSpacing;
+                
+                createTreeNode(child, childX, childY);
+                
+                // Dibujar conector
+                drawConnector(parentX, parentY, childX, childY);
+                
+                // Renderizar hijos recursivamente
+                renderTreeNodes(child, childX, childY, level + 1, nodeSpacing);
+            });
+        }
 
+        // Dibujar conector entre nodos
+        function drawConnector(fromX, fromY, toX, toY) {
+            // Calcular puntos
+            const startX = fromX + 100;
+            const startY = fromY + 50;
+            const endX = toX + 100;
+            const endY = toY;
+            
+            // Crear línea vertical desde el nodo padre
+            const verticalLine = document.createElement('div');
+            verticalLine.className = 'tree-connector vertical';
+            verticalLine.style.left = ${startX}px;
+            verticalLine.style.top = ${startY}px;
+            verticalLine.style.height = ${Math.abs(endY - startY)}px;
+            verticalLine.style.width = '3px';
+            
+            // Crear línea horizontal hacia el nodo hijo
+            const horizontalLine = document.createElement('div');
+            horizontalLine.className = 'tree-connector horizontal';
+            horizontalLine.style.left = ${Math.min(startX, endX)}px;
+            horizontalLine.style.top = ${endY}px;
+            horizontalLine.style.width = ${Math.abs(endX - startX)}px;
+            horizontalLine.style.height = '3px';
+            
+            treeContainer.appendChild(verticalLine);
+            treeContainer.appendChild(horizontalLine);
+        }
+
+        // Manejar clic en nodo
+        function handleNodeClick(node) {
+            if (!isDecisionActive && node.type !== "root") {
+                showMessage("Primero inicia una decisión con el botón 'Iniciar Decisión'");
+                return;
+            }
+            
+            if (node.type === "root" && !isDecisionActive) {
+                showMessage("Haz clic en 'Iniciar Decisión' para comenzar");
+                return;
+            }
+            
+            // Si no es una opción o resultado, no hacer nada
+            if (node.type !== "option" && node.type !== "result") return;
+            
+            // Añadir al camino
+            currentPath.push({
+                id: node.id,
+                name: node.name,
+                description: node.description,
+                type: node.type
+            });
+            
+            // Actualizar nodo actual
+            currentNode = node;
+            
+            // Resaltar camino
+            highlightPath();
+            
+            // Actualizar interfaz
+            updateDecisionPath();
+            updateCurrentDecision();
+            updateStats();
+            
+            // Si es resultado, finalizar decisión
+            if (node.type === "result") {
+                isDecisionActive = false;
+                showMessage(¡Decisión completada! Resultado: ${node.name}. Riesgo: ${node.risk}, Éxito: ${node.success});
+            }
+        }
+
+        // Resaltar camino actual
+        function highlightPath() {
+            // Remover resaltado previo
+            document.querySelectorAll('.tree-node.active').forEach(node => {
+                node.classList.remove('active');
+            });
+            
+            // Resaltar nodos en el camino
+            currentPath.forEach(step => {
+                const nodeElement = document.getElementById(node-${step.id});
+                if (nodeElement) {
+                    nodeElement.classList.add('active');
+                }
+            });
+            
+            // También resaltar nodo raíz si hay camino
+            if (currentPath.length > 0) {
+                const rootElement = document.getElementById('node-root');
+                if (rootElement) {
+                    rootElement.classList.add('active');
+                }
+            }
+        }
+
+        // Mostrar tooltip para nodo
+        function showNodeTooltip(node, event) {
+            let tooltipContent = <strong>${node.name}</strong><br/>${node.description};
+            
+            if (node.type === "result") {
+                tooltipContent += <br/><br/><strong>Riesgo:</strong> ${node.risk}<br/><strong>Probabilidad de éxito:</strong> ${node.success};
+            }
+            
+            nodeTooltip.innerHTML = tooltipContent;
+            nodeTooltip.style.display = 'block';
+            nodeTooltip.style.left = ${event.pageX + 10}px;
+            nodeTooltip.style.top = ${event.pageY - 28}px;
+        }
+
+        function hideNodeTooltip() {
+            nodeTooltip.style.display = 'none';
+        }
+
+        // Actualizar camino de decisión en la interfaz
+        function updateDecisionPath() {
+            const pathContainer = document.getElementById("decisionPath");
+            
+            if (currentPath.length === 0) {
+                pathContainer.innerHTML = `
+                    <div class="path-step">
+                        <div class="step-number">?</div>
+                        <div class="step-content">
+                            <div class="step-question">Sin decisiones tomadas aún</div>
+                            <div class="step-choice">Selecciona una opción en el árbol para comenzar</div>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+            
+            let pathHTML = "";
+            
+            currentPath.forEach((step, index) => {
+                pathHTML += `
+                    <div class="path-step">
+                        <div class="step-number">${index + 1}</div>
+                        <div class="step-content">
+                            <div class="step-question">${step.name}</div>
+                            <div class="step-choice">${step.description}</div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            pathContainer.innerHTML = pathHTML;
+            pathContainer.scrollTop = pathContainer.scrollHeight;
+        }
+
+        // Actualizar decisión actual
+        function updateCurrentDecision() {
+            const currentDecisionElement = document.getElementById("currentDecision");
+            
+            if (!isDecisionActive) {
+                currentDecisionElement.innerHTML = `
+                    <div class="decision-text">
+                        <i class="fas fa-info-circle"></i> 
+                        <strong>Estado:</strong> Esperando inicio de decisión. Haz clic en "Iniciar Decisión" para comenzar.
+                    </div>
+                `;
+                return;
+            }
+            
+            if (currentPath.length === 0) {
+                currentDecisionElement.innerHTML = `
+                    <div class="decision-text">
+                        <i class="fas fa-play-circle"></i> 
+                        <strong>Decisión iniciada:</strong> Selecciona tu primer paso en el árbol de decisiones.
+                    </div>
+                `;
+                return;
+            }
+            
+            const lastStep = currentPath[currentPath.length - 1];
+            
+            if (lastStep.type === "result") {
+                currentDecisionElement.innerHTML = `
+                    <div class="decision-text">
+                        <i class="fas fa-flag-checkered"></i> 
+                        <strong>Decisión completada:</strong> Has llegado al resultado final: 
+                        <span class="result-text">"${lastStep.name}"</span>
+                    </div>
+                `;
+            } else {
+                currentDecisionElement.innerHTML = `
+                    <div class="decision-text">
+                        <i class="fas fa-question-circle"></i> 
+                        <strong>Paso actual:</strong> "${lastStep.name}". 
+                        <strong>Descripción:</strong> ${lastStep.description}
+                    </div>
+                `;
+            }
+        }
+
+        // Actualizar estadísticas
+        function updateStats() {
+            document.getElementById('decisionStep').textContent = currentPath.length;
+        }
+
+        // Mostrar mensaje
+        function showMessage(message) {
+            alert(message);
+        }
+
+        // Iniciar decisión
+        function startDecision() {
+            isDecisionActive = true;
+            currentPath = [];
+            currentNode = null;
+            updateDecisionPath();
+            updateCurrentDecision();
+            updateStats();
+            
+            // Remover resaltado previo
+            document.querySelectorAll('.tree-node.active').forEach(node => {
+                node.classList.remove('active');
+            });
+            
+            showMessage("¡Decisión iniciada! Ahora puedes seleccionar opciones en el árbol.");
+        }
+
+        // Reiniciar todo
+        function resetDecision() {
+            isDecisionActive = false;
+            currentPath = [];
+            currentNode = null;
+            updateDecisionPath();
+            updateCurrentDecision();
+            updateStats();
+            
+            // Remover resaltado
+            document.querySelectorAll('.tree-node.active').forEach(node => {
+                node.classList.remove('active');
+            });
+        }
+
+        // Recorrido automático
+        function autoTraverse() {
+            resetDecision();
+            startDecision();
+            
+            // Simular un camino predeterminado
+            setTimeout(() => {
+                // Seleccionar Enfoque Ágil
+                simulateClick('agile');
+                
+                setTimeout(() => {
+                    // Seleccionar Equipo Pequeño
+                    simulateClick('team_small');
+                    
+                    setTimeout(() => {
+                        // Seleccionar Sprints Cortos
+                        simulateClick('sprints_short');
+                        
+                        setTimeout(() => {
+                            // Seleccionar resultado final
+                            simulateClick('result1');
+                        }, 800);
+                    }, 800);
+                }, 800);
+            }, 500);
+        }
+
+        // Simular clic en un nodo
+        function simulateClick(nodeId) {
+            const node = findNodeById(decisionTree, nodeId);
+            if (node) {
+                handleNodeClick(node);
+            }
+        }
+
+        // Buscar nodo por ID
+        function findNodeById(tree, id) {
+            if (tree.id === id) return tree;
+            
+            if (tree.children) {
+                for (let child of tree.children) {
+                    const found = findNodeById(child, id);
+                    if (found) return found;
+                }
+            }
+            
+            return null;
+        }
+
+        // Ejemplos de caminos
+        function example1() {
+            resetDecision();
+            startDecision();
+            
+            setTimeout(() => {
+                simulateClick('agile');
+                setTimeout(() => {
+                    simulateClick('team_small');
+                    setTimeout(() => {
+                        simulateClick('sprints_short');
+                        setTimeout(() => {
+                            simulateClick('result1');
+                        }, 600);
+                    }, 600);
+                }, 600);
+            }, 500);
+        }
+
+        function example2() {
+            resetDecision();
+            startDecision();
+            
+            setTimeout(() => {
+                simulateClick('agile');
+                setTimeout(() => {
+                    simulateClick('team_large');
+                    setTimeout(() => {
+                        simulateClick('hybrid');
+                        setTimeout(() => {
+                            simulateClick('result4');
+                        }, 600);
+                    }, 600);
+                }, 600);
+            }, 500);
+        }
+
+        function example3() {
+            resetDecision();
+            startDecision();
+            
+            setTimeout(() => {
+                simulateClick('traditional');
+                setTimeout(() => {
+                    simulateClick('detailed');
+                    setTimeout(() => {
+                        simulateClick('flexible');
+                        setTimeout(() => {
+                            simulateClick('result6');
+                        }, 600);
+                    }, 600);
+                }, 600);
+            }, 500);
+        }
+
+        // Configurar eventos
+        startBtn.addEventListener('click', startDecision);
+        resetBtn.addEventListener('click', resetDecision);
+        autoBtn.addEventListener('click', autoTraverse);
+        example1Btn.addEventListener('click', example1);
+        example2Btn.addEventListener('click', example2);
+        example3Btn.addEventListener('click', example3);
+        
+        zoomInBtn.addEventListener('click', () => {
+            treeContainer.style.transform = scale(${1.2});
+        });
+        
+        zoomOutBtn.addEventListener('click', () => {
+            treeContainer.style.transform = scale(${0.8});
+        });
+        
+        centerBtn.addEventListener('click', () => {
+            treeContainer.style.transform = 'scale(1)';
+            treeContainer.scrollLeft = treeContainer.scrollWidth / 2 - treeContainer.clientWidth / 2;
+        });
+
+        // Inicializar cuando la página cargue
+        window.addEventListener('load', initTree);
+    </script>
 </body>
 </html>
