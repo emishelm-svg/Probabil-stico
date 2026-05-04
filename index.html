@@ -2,766 +2,528 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TRUEKE — Propuesta Hotelera Loja 2025</title>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,700&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>TRUEKE · La pantalla inteligente para hoteles | NODO Loja 2025</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --blue:       #003DA6;
-  --blue-mid:   #0052CC;
-  --blue-light: #1A6EE8;
-  --blue-dark:  #001F6B;
-  --cyan:       #00AEEF;
-  --cyan-mid:   #0099D6;
-  --cyan-dark:  #006F9E;
-  --cyan-pale:  #E0F6FF;
-  --cyan-ghost: #F0FBFF;
-  --yellow:     #FFD700;
-  --yellow-mid: #F5C200;
-  --yellow-pale:#FFFAE0;
-  --yellow-dark:#9A7800;
-  --white:      #FFFFFF;
-  --off-white:  #F4F8FF;
-  --dark:       #001830;
-  --mid:        #0A2545;
-  --body:       #1A3A5C;
-  --light:      #4A7AAC;
-  --rule:       #B0D4F0;
-  --green:      #007A52;
-  --green-bg:   #DFF5EC;
-  --red:        #C0392B;
-}
-html { font-size: 16px; scroll-behavior: smooth; }
-body {
-  font-family: 'Barlow', sans-serif;
-  background: #DCE8F8; color: var(--dark);
-  line-height: 1.6; -webkit-font-smoothing: antialiased;
-}
-.brochure {
-  max-width: 920px; margin: 0 auto;
-  background: var(--white);
-  box-shadow: 0 6px 80px rgba(0,61,166,.18);
-}
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 
-/* ── Shared ──────────────────────────────── */
-.eyebrow {
-  font-family: 'Space Mono', monospace;
-  font-size: 10px; letter-spacing: .22em; text-transform: uppercase;
-  color: var(--cyan); display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
-}
-.eyebrow::after { content: ''; width: 44px; height: 1.5px; background: var(--rule); }
-.sec-title {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: clamp(30px, 4.2vw, 44px); font-weight: 800;
-  line-height: 1.05; color: var(--blue); margin-bottom: 12px; letter-spacing: -.01em;
-}
-.sec-title em { font-style: italic; color: var(--cyan-dark); font-weight: 300; }
-.sec-lead { font-size: 15px; font-weight: 300; color: var(--body); line-height: 1.75; max-width: 600px; margin-bottom: 36px; }
-section { padding: 64px 58px; }
-section + section { border-top: 1px solid var(--rule); }
+  :root {
+    --deep-blue: #002B5C;
+    --electric-blue: #0057B3;
+    --vibrant-cyan: #00A8E8;
+    --sun-gold: #FFC107;
+    --soft-gold: #FFE28C;
+    --pure-white: #FFFFFF;
+    --off-white: #F8FAFE;
+    --slate-100: #F1F4F9;
+    --slate-300: #CFDDEB;
+    --ink: #13294B;
+    --ink-light: #2C3F66;
+    --success-green: #1E7A5C;
+    --green-mint: #E0F2ED;
+    --alert-red: #C4282B;
+    --shadow-sm: 0 10px 25px -5px rgba(0, 43, 92, 0.08), 0 8px 10px -6px rgba(0, 43, 92, 0.02);
+    --shadow-md: 0 20px 35px -12px rgba(0, 43, 92, 0.12);
+    --radius-card: 1.25rem;
+    --radius-sm: 0.875rem;
+  }
 
-/* ── COVER ───────────────────────────────── */
-.cover {
-  background: var(--blue); min-height: 96vh;
-  display: grid; grid-template-rows: 1fr auto;
-  position: relative; overflow: hidden;
-}
-.cover-geo::before {
-  content: ''; position: absolute; top: -90px; right: -70px;
-  width: 440px; height: 440px; border-radius: 50%;
-  background: var(--blue-mid); opacity: .55;
-}
-.cover-geo::after {
-  content: ''; position: absolute; bottom: 110px; left: -110px;
-  width: 340px; height: 340px; border-radius: 50%;
-  background: var(--cyan); opacity: .11;
-}
-.cover-accent {
-  position: absolute; top: 0; right: 0; width: 0; height: 0;
-  border-style: solid; border-width: 0 230px 230px 0;
-  border-color: transparent var(--yellow) transparent transparent; opacity: .88;
-}
-.cover-stripe {
-  position: absolute; bottom: 88px; left: 0; right: 0; height: 3px;
-  background: linear-gradient(90deg, var(--cyan), var(--blue-light), transparent); opacity: .45;
-}
-.cover-inner {
-  position: relative; z-index: 2;
-  padding: 72px 58px 48px; display: flex; flex-direction: column; justify-content: center;
-}
-.cover-tag {
-  font-family: 'Space Mono', monospace; font-size: 9.5px; letter-spacing: .26em; color: var(--cyan);
-  display: flex; align-items: center; gap: 14px; margin-bottom: 36px;
-}
-.cover-tag::before { content: ''; width: 30px; height: 2px; background: var(--cyan); }
-.cover-brand {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: clamp(84px, 15vw, 130px); font-weight: 900; line-height: .86;
-  color: var(--white); letter-spacing: -.02em; margin-bottom: 4px;
-}
-.cover-sub {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: clamp(28px, 4.2vw, 42px); font-weight: 300; font-style: italic;
-  color: var(--cyan); letter-spacing: .02em; margin-bottom: 28px;
-}
-.cover-tagline {
-  font-size: 16px; font-weight: 300; color: rgba(255,255,255,.70);
-  line-height: 1.68; max-width: 480px; margin-bottom: 36px;
-}
-.cover-badge {
-  display: inline-flex; align-items: center; gap: 12px;
-  background: var(--yellow); color: var(--dark);
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 15px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase;
-  padding: 13px 40px 13px 22px;
-  clip-path: polygon(0 0,calc(100% - 16px) 0,100% 50%,calc(100% - 16px) 100%,0 100%);
-  width: fit-content; margin-bottom: 12px;
-}
-.cover-badge strong { font-size: 19px; }
-.cover-qr-hint {
-  display: flex; align-items: center; gap: 12px;
-  padding: 12px 18px; background: rgba(0,174,239,.15); border-left: 3px solid var(--cyan);
-  max-width: 490px;
-}
-.cover-qr-hint span { font-size: 12.5px; font-weight: 300; color: rgba(255,255,255,.75); line-height: 1.5; }
-.cover-qr-hint strong { color: var(--cyan); font-weight: 600; }
-.cover-kpis {
-  position: relative; z-index: 2;
-  display: grid; grid-template-columns: repeat(3, 1fr);
-  border-top: 1px solid rgba(255,255,255,.1);
-}
-.cover-kpi { padding: 22px 28px; border-right: 1px solid rgba(255,255,255,.1); }
-.cover-kpi:last-child { border-right: none; }
-.kpi-val { font-family: 'Barlow Condensed', sans-serif; font-size: 30px; font-weight: 900; color: var(--yellow); line-height: 1; margin-bottom: 3px; }
-.kpi-lbl { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.48); }
+  body {
+    background: linear-gradient(145deg, #E9F0F9 0%, #DAE5F2 100%);
+    font-family: 'Inter', sans-serif;
+    color: var(--ink);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    padding: 2rem 1rem;
+  }
 
-/* ── QR CIUDAD ───────────────────────────── */
-.qr-section { background: var(--blue); border-top: none !important; }
-.qr-section .sec-title { color: var(--white); }
-.qr-section .eyebrow { color: var(--yellow); }
-.qr-section .eyebrow::after { background: rgba(255,255,255,.2); }
-.qr-explain { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 36px; }
-.qr-col-free, .qr-col-trueke { padding: 28px 26px; position: relative; overflow: hidden; }
-.qr-col-free { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.14); }
-.qr-col-trueke { background: rgba(0,174,239,.12); border: 2px solid var(--cyan); }
-.qr-col-trueke::before {
-  content: 'CON TRUEKE'; position: absolute; top: 0; right: 0;
-  background: var(--cyan); color: var(--white);
-  font-family: 'Space Mono', monospace; font-size: 8px; letter-spacing: .15em; padding: 4px 12px;
-}
-.qr-col-label { font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 16px; }
-.qr-col-free .qr-col-label { color: rgba(255,255,255,.45); }
-.qr-col-trueke .qr-col-label { color: var(--cyan); }
-.qr-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 11px; }
-.qr-dot { flex-shrink: 0; width: 7px; height: 7px; border-radius: 50%; margin-top: 5px; }
-.qr-col-free .qr-dot { background: rgba(255,255,255,.28); }
-.qr-col-trueke .qr-dot { background: var(--cyan); }
-.qr-item-text { font-size: 13px; font-weight: 300; line-height: 1.55; }
-.qr-col-free .qr-item-text { color: rgba(255,255,255,.52); }
-.qr-col-trueke .qr-item-text { color: rgba(255,255,255,.88); }
-.qr-col-trueke .qr-item-text strong { color: var(--yellow); font-weight: 600; }
-.qr-ranking {
-  grid-column: 1 / -1; background: var(--yellow);
-  padding: 22px 28px; display: flex; align-items: center; gap: 20px;
-}
-.qr-ranking-ico { font-size: 34px; flex-shrink: 0; }
-.qr-ranking-title { font-family: 'Barlow Condensed', sans-serif; font-size: 19px; font-weight: 900; color: var(--dark); letter-spacing: .02em; margin-bottom: 4px; }
-.qr-ranking-body { font-size: 13px; font-weight: 400; color: var(--mid); line-height: 1.55; }
+  /* main container glassmorph clean */
+  .brochure {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: var(--pure-white);
+    border-radius: 2.5rem;
+    overflow: hidden;
+    box-shadow: 0 30px 60px rgba(0, 43, 92, 0.2), 0 0 0 1px rgba(0, 168, 232, 0.1);
+    transition: all 0.2s ease;
+  }
 
-/* ── FEATURES ────────────────────────────── */
-.features-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-.feat-card {
-  border: 1px solid var(--rule); border-top: 4px solid var(--cyan);
-  background: var(--cyan-ghost); padding: 24px 22px;
-  transition: transform .22s, box-shadow .22s;
-}
-.feat-card:hover { transform: translateY(-4px); box-shadow: 0 14px 36px rgba(0,174,239,.14); }
-.feat-ico {
-  width: 38px; height: 38px; background: var(--blue);
-  display: flex; align-items: center; justify-content: center; margin-bottom: 12px;
-  clip-path: polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
-}
-.feat-ico svg { width: 18px; height: 18px; fill: var(--yellow); }
-.feat-name { font-family: 'Barlow Condensed', sans-serif; font-size: 17px; font-weight: 700; color: var(--blue); margin-bottom: 5px; letter-spacing: .01em; }
-.feat-desc { font-size: 13px; font-weight: 300; color: var(--body); line-height: 1.62; }
-.pioneer-banner {
-  margin-top: 28px; background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue-mid) 100%);
-  padding: 26px 32px; display: flex; align-items: center; gap: 20px;
-  position: relative; overflow: hidden;
-}
-.pioneer-banner::after {
-  content: ''; position: absolute; right: -40px; top: -40px;
-  width: 160px; height: 160px; border-radius: 50%; background: var(--cyan); opacity: .08;
-}
-.pioneer-ico { font-size: 36px; flex-shrink: 0; }
-.pioneer-title { font-family: 'Barlow Condensed', sans-serif; font-size: 19px; font-weight: 900; color: var(--yellow); letter-spacing: .02em; margin-bottom: 4px; }
-.pioneer-body { font-size: 13.5px; font-weight: 300; color: rgba(255,255,255,.75); line-height: 1.6; }
+  /* typography */
+  h1, h2, h3, .heading-sans {
+    font-family: 'Manrope', sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
 
-/* ── WHY ──────────────────────────────────── */
-.why-section { background: var(--off-white); }
-.why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 36px; }
-.why-card {
-  background: var(--white); border: 1px solid var(--rule);
-  border-top: 4px solid transparent; padding: 26px 22px;
-}
-.why-card:nth-child(1) { border-top-color: var(--cyan); }
-.why-card:nth-child(2) { border-top-color: var(--yellow-mid); }
-.why-card:nth-child(3) { border-top-color: var(--blue-light); }
-.why-card:nth-child(4) { border-top-color: var(--cyan); }
-.why-card:nth-child(5) { border-top-color: var(--yellow-mid); }
-.why-stat { font-family: 'Barlow Condensed', sans-serif; font-size: 44px; font-weight: 900; color: var(--blue); line-height: 1; margin-bottom: 6px; }
-.why-title { font-family: 'Barlow Condensed', sans-serif; font-size: 14px; font-weight: 700; color: var(--blue-mid); letter-spacing: .05em; text-transform: uppercase; margin-bottom: 7px; }
-.why-body { font-size: 13px; font-weight: 300; color: var(--body); line-height: 1.65; }
-.pullquote {
-  margin-top: 36px; padding: 26px 30px;
-  background: var(--blue); border-left: 5px solid var(--yellow);
-}
-.pullquote p { font-family: 'Barlow Condensed', sans-serif; font-size: 20px; font-style: italic; font-weight: 300; color: rgba(255,255,255,.9); line-height: 1.55; }
-.pullquote cite { display: block; margin-top: 10px; font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: .18em; text-transform: uppercase; color: var(--cyan); font-style: normal; }
+  .badge-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--electric-blue);
+    background: var(--slate-100);
+    padding: 0.3rem 1rem 0.3rem 1.2rem;
+    border-radius: 40px;
+    width: fit-content;
+    margin-bottom: 1.2rem;
+  }
+  .badge-eyebrow::before {
+    content: "✦";
+    font-size: 0.8rem;
+    color: var(--vibrant-cyan);
+  }
 
-/* ── BEFORE / AFTER ──────────────────────── */
-.ba-section { background: var(--cyan-ghost); }
-.ba-table { width: 100%; border-collapse: collapse; margin-top: 30px; font-size: 13.5px; }
-.ba-table thead th {
-  padding: 12px 16px; font-family: 'Space Mono', monospace;
-  font-size: 9.5px; letter-spacing: .15em; text-transform: uppercase; text-align: left;
-  border-bottom: 2px solid var(--rule);
-}
-.ba-table thead th:first-child { width: 20%; background: var(--cyan-pale); color: var(--cyan-dark); }
-.ba-table thead th:nth-child(2) { background: #FDECEA; color: var(--red); }
-.ba-table thead th:nth-child(3) { background: var(--green-bg); color: var(--green); }
-.ba-table tbody tr:nth-child(odd) td { background: rgba(0,174,239,.04); }
-.ba-table tbody tr:nth-child(odd) td:nth-child(2) { background: rgba(192,57,43,.04); }
-.ba-table tbody tr:nth-child(odd) td:nth-child(3) { background: rgba(0,122,82,.05); }
-.ba-table td { padding: 13px 16px; border-bottom: 1px solid var(--rule); color: var(--body); line-height: 1.5; vertical-align: top; }
-.ba-table td:first-child { font-family: 'Barlow Condensed', sans-serif; font-size: 14px; font-weight: 700; color: var(--blue); }
+  .section-title {
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 800;
+    line-height: 1.2;
+    color: var(--deep-blue);
+    margin-bottom: 0.75rem;
+  }
+  .section-title span {
+    background: linear-gradient(135deg, var(--electric-blue), var(--vibrant-cyan));
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    font-weight: 800;
+  }
+  .section-lead {
+    font-size: 1rem;
+    color: var(--ink-light);
+    max-width: 680px;
+    margin-bottom: 2rem;
+    font-weight: 400;
+  }
 
-/* ── PRICING ──────────────────────────────── */
-.pricing-section { background: var(--cyan-pale); }
-.plans-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; margin-bottom: 26px; }
-.plan-card {
-  background: var(--white); border: 1px solid var(--rule); border-top: 4px solid var(--cyan);
-  padding: 26px 22px 22px; position: relative; transition: box-shadow .2s;
-}
-.plan-card:hover { box-shadow: 0 10px 32px rgba(0,82,204,.13); }
-.plan-card.featured { border-color: var(--blue); border-top: 5px solid var(--yellow); }
-.plan-card.featured::after {
-  content: 'OFERTA HOTELES'; position: absolute; top: -1px; right: 16px;
-  background: var(--yellow); color: var(--dark);
-  font-family: 'Space Mono', monospace; font-size: 7.5px; font-weight: 700; letter-spacing: .1em; padding: 3px 10px;
-}
-.plan-name { font-family: 'Barlow Condensed', sans-serif; font-size: 19px; font-weight: 800; color: var(--blue); letter-spacing: .02em; margin-bottom: 5px; }
-.plan-desc { font-size: 12px; font-weight: 300; color: var(--light); margin-bottom: 18px; line-height: 1.55; }
-.plan-price-row { display: flex; align-items: baseline; gap: 6px; margin-bottom: 4px; }
-.plan-price { font-family: 'Barlow Condensed', sans-serif; font-size: 44px; font-weight: 900; color: var(--blue); line-height: 1; }
-.plan-price sup { font-size: 18px; vertical-align: super; }
-.plan-period { font-size: 13px; color: var(--light); }
-.plan-note { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--light); margin-bottom: 18px; letter-spacing: .04em; }
-.plan-div { height: 1px; background: var(--rule); margin: 14px 0; }
-.plan-feats { list-style: none; display: flex; flex-direction: column; gap: 7px; }
-.plan-feats li {
-  font-size: 12.5px; font-weight: 300; color: var(--body);
-  display: flex; gap: 8px; align-items: flex-start; line-height: 1.45;
-}
-.plan-feats li::before {
-  content: ''; flex-shrink: 0; width: 14px; height: 14px; border-radius: 50%; margin-top: 1px;
-  background: var(--green-bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2 6l3 3 5-5' stroke='%23007A52' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat center;
-  border: 1.5px solid var(--green);
-}
-.plan-qr-tag {
-  display: flex; align-items: flex-start; gap: 7px;
-  background: var(--yellow-pale); border: 1px solid var(--yellow-mid);
-  padding: 8px 10px; margin-top: 14px;
-  font-size: 11.5px; color: var(--yellow-dark); font-weight: 500; line-height: 1.45;
-}
-.plan-qr-tag::before { content: '📍'; font-size: 13px; flex-shrink: 0; }
-.hotel-banner {
-  background: var(--blue); display: grid; grid-template-columns: 1fr auto;
-  gap: 24px; align-items: center; padding: 28px 32px; margin-bottom: 20px;
-  position: relative; overflow: hidden;
-}
-.hotel-banner::before {
-  content: ''; position: absolute; left: 0; top: 0; bottom: 0;
-  width: 5px; background: linear-gradient(180deg, var(--yellow), var(--cyan));
-}
-.hb-label { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: var(--cyan); margin-bottom: 6px; }
-.hb-title { font-family: 'Barlow Condensed', sans-serif; font-size: 22px; font-weight: 900; color: var(--white); line-height: 1.2; }
-.hb-title span { color: var(--yellow); }
-.hb-sub { font-size: 12px; font-weight: 300; font-style: italic; color: rgba(255,255,255,.58); margin-top: 4px; }
-.hb-price { text-align: center; flex-shrink: 0; }
-.hb-old { font-family: 'Space Mono', monospace; font-size: 11px; color: rgba(255,255,255,.35); text-decoration: line-through; margin-bottom: 2px; }
-.hb-new { font-family: 'Barlow Condensed', sans-serif; font-size: 58px; font-weight: 900; color: var(--yellow); line-height: 1; }
-.hb-per { font-size: 11px; color: rgba(255,255,255,.45); }
-.incentives { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; background: var(--rule); border: 1px solid var(--rule); }
-.incentive { background: var(--white); padding: 16px 14px; text-align: center; border-top: 3px solid transparent; transition: border-color .2s; }
-.incentive:hover { border-top-color: var(--cyan); }
-.inc-ico { font-size: 22px; margin-bottom: 6px; }
-.inc-title { font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 700; color: var(--blue); letter-spacing: .02em; margin-bottom: 3px; }
-.inc-desc { font-size: 11px; font-weight: 300; color: var(--body); line-height: 1.45; }
+  section, .full-bleed {
+    padding: 3rem 2.5rem;
+  }
+  @media (max-width: 700px) {
+    section, .full-bleed {
+      padding: 2.2rem 1.5rem;
+    }
+    body {
+      padding: 0.8rem;
+    }
+  }
 
-/* ── COMPARISON ──────────────────────────── */
-.comp-section { background: var(--white); }
-.comp-table { width: 100%; border-collapse: collapse; margin-top: 30px; font-size: 13px; }
-.comp-table thead th {
-  padding: 12px 16px; font-family: 'Space Mono', monospace;
-  font-size: 9px; letter-spacing: .14em; text-transform: uppercase; text-align: center;
-  border-bottom: 2px solid var(--rule);
-}
-.comp-table thead th:first-child { text-align: left; background: var(--off-white); color: var(--body); }
-.comp-table thead th:nth-child(2),
-.comp-table thead th:nth-child(3),
-.comp-table thead th:nth-child(4) { background: var(--off-white); color: var(--light); }
-.comp-table thead th:last-child { background: var(--blue); color: var(--yellow); }
-.comp-table tbody td { padding: 11px 16px; border-bottom: 1px solid var(--rule); text-align: center; font-weight: 300; }
-.comp-table tbody td:first-child { text-align: left; font-family: 'Barlow Condensed', sans-serif; font-size: 14px; font-weight: 700; color: var(--blue); }
-.comp-table tbody tr:nth-child(odd) td { background: var(--cyan-ghost); }
-.comp-table tbody tr:nth-child(even) td { background: var(--white); }
-.comp-table tbody tr:nth-child(odd) td:last-child { background: rgba(0,82,204,.07); }
-.comp-table tbody tr:nth-child(even) td:last-child { background: rgba(0,82,204,.04); }
-.chk { color: var(--green); font-weight: 700; font-size: 15px; }
-.crs { color: var(--red); font-weight: 700; font-size: 15px; }
-.wrn { color: #9A7800; font-size: 12px; font-weight: 500; }
-.si  { font-family: 'Barlow Condensed', sans-serif; font-size: 16px; font-weight: 900; color: var(--green); letter-spacing: .04em; }
+  /* cards & grid */
+  .grid-2cols, .grid-3cols {
+    display: grid;
+    gap: 1.8rem;
+  }
+  .grid-2cols { grid-template-columns: repeat(2, 1fr); }
+  .grid-3cols { grid-template-columns: repeat(3, 1fr); }
+  @media (max-width: 780px) {
+    .grid-2cols, .grid-3cols { grid-template-columns: 1fr; }
+  }
 
-/* ── PROCESS ──────────────────────────────── */
-.process-section { background: var(--cyan-pale); }
-.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin-top: 36px; position: relative; }
-.steps::before {
-  content: ''; position: absolute; top: 27px; left: 16%; right: 16%;
-  height: 2px; background: linear-gradient(90deg, var(--blue), var(--cyan), var(--blue));
-}
-.step { padding: 0 20px; text-align: center; position: relative; z-index: 1; }
-.step-num { width: 54px; height: 54px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-family: 'Barlow Condensed', sans-serif; font-size: 22px; font-weight: 900; }
-.step:nth-child(1) .step-num { background: var(--blue); color: var(--yellow); }
-.step:nth-child(2) .step-num { background: var(--cyan); color: var(--white); }
-.step:nth-child(3) .step-num { background: var(--green); color: var(--white); }
-.step-title { font-family: 'Barlow Condensed', sans-serif; font-size: 16px; font-weight: 800; color: var(--blue); margin-bottom: 6px; letter-spacing: .02em; }
-.step-body { font-size: 13px; font-weight: 300; color: var(--body); line-height: 1.6; }
+  .card-glass {
+    background: var(--pure-white);
+    border-radius: var(--radius-card);
+    padding: 1.5rem;
+    transition: all 0.25s ease;
+    border: 1px solid var(--slate-300);
+    box-shadow: var(--shadow-sm);
+  }
+  .card-glass:hover {
+    transform: translateY(-5px);
+    border-color: var(--vibrant-cyan);
+    box-shadow: var(--shadow-md);
+  }
 
-/* ── CTA ────────────────────────────────── */
-.cta-section {
-  background: var(--blue); padding: 64px 58px;
-  display: grid; grid-template-columns: 1fr auto; gap: 40px; align-items: center;
-  border-top: none !important; position: relative; overflow: hidden;
-}
-.cta-section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--yellow), var(--cyan)); }
-.cta-section::after { content: ''; position: absolute; bottom: -80px; right: -80px; width: 300px; height: 300px; border-radius: 50%; background: var(--cyan); opacity: .07; }
-.cta-title { font-family: 'Barlow Condensed', sans-serif; font-size: clamp(28px, 4vw, 40px); font-weight: 900; color: var(--white); line-height: 1.1; margin-bottom: 10px; }
-.cta-title em { font-style: italic; color: var(--yellow); font-weight: 300; }
-.cta-sub { font-size: 14px; font-weight: 300; color: rgba(255,255,255,.58); line-height: 1.7; }
-.cta-block { flex-shrink: 0; position: relative; z-index: 1; }
-.cta-btn {
-  display: block; background: var(--yellow); color: var(--dark);
-  text-decoration: none; font-family: 'Barlow Condensed', sans-serif;
-  font-size: 15px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
-  padding: 15px 44px 15px 26px; text-align: center; margin-bottom: 14px;
-  clip-path: polygon(0 0,calc(100% - 14px) 0,100% 50%,calc(100% - 14px) 100%,0 100%);
-  border: none; cursor: pointer; transition: background .2s, color .2s;
-}
-.cta-btn:hover { background: var(--cyan); color: var(--white); }
-.cta-contact { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: .08em; color: rgba(255,255,255,.42); text-align: center; line-height: 1.8; }
-.cta-contact a { color: var(--cyan); text-decoration: none; }
+  /* cover hero */
+  .hero-cover {
+    background: linear-gradient(125deg, #001F42 0%, #00337C 100%);
+    position: relative;
+    overflow: hidden;
+    padding: 3rem 2.8rem 2rem 2.8rem;
+  }
+  .hero-cover::before {
+    content: '';
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(0,168,232,0.2) 0%, rgba(0,168,232,0) 70%);
+    bottom: -120px;
+    right: -80px;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .hero-cover::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 180px;
+    height: 180px;
+    background: var(--sun-gold);
+    opacity: 0.1;
+    clip-path: polygon(100% 0, 0 0, 100% 100%);
+  }
+  .hero-inner {
+    position: relative;
+    z-index: 2;
+  }
+  .hero-tag {
+    color: var(--vibrant-cyan);
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    font-size: 0.75rem;
+    background: rgba(255,255,255,0.08);
+    display: inline-block;
+    padding: 0.3rem 1rem;
+    border-radius: 40px;
+    margin-bottom: 1.5rem;
+    backdrop-filter: blur(2px);
+  }
+  .hero-title {
+    font-size: clamp(2.8rem, 8vw, 4.8rem);
+    color: white;
+    line-height: 1.05;
+    margin-bottom: 0.8rem;
+  }
+  .hero-title strong {
+    color: var(--sun-gold);
+    font-weight: 800;
+  }
+  .hero-sub {
+    font-size: 1.25rem;
+    color: rgba(255,255,255,0.85);
+    max-width: 580px;
+    margin-bottom: 2rem;
+    font-weight: 400;
+  }
+  .hero-badge {
+    background: var(--sun-gold);
+    color: var(--deep-blue);
+    padding: 0.7rem 1.8rem;
+    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: 60px;
+    font-size: 0.9rem;
+    margin-bottom: 1.2rem;
+  }
+  .stats-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2.5rem;
+    margin-top: 2rem;
+    border-top: 1px solid rgba(255,255,255,0.2);
+    padding-top: 1.8rem;
+  }
+  .stat-item h3 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--sun-gold);
+  }
+  .stat-item p {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+    letter-spacing: 0.05em;
+  }
 
-/* ── FOOTER ──────────────────────────────── */
-.footer { background: var(--dark); padding: 16px 58px; display: flex; align-items: center; justify-content: space-between; }
-.footer-brand { font-family: 'Barlow Condensed', sans-serif; font-size: 20px; font-weight: 900; color: var(--white); letter-spacing: .08em; display: flex; align-items: center; gap: 10px; }
-.footer-brand::before { content: ''; width: 3px; height: 18px; background: var(--yellow); }
-.footer-nodo { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.3); }
+  /* qr zone */
+  .qr-highlight {
+    background: linear-gradient(120deg, #EFF7FF, #E1F0FC);
+    border-radius: 1.5rem;
+  }
+  .two-cols-compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+  }
+  .compare-card {
+    background: white;
+    border-radius: 1.25rem;
+    padding: 1.6rem;
+    box-shadow: var(--shadow-sm);
+    border-left: 5px solid;
+  }
+  .compare-card.free { border-left-color: #BAC8D9; }
+  .compare-card.trueke { border-left-color: var(--vibrant-cyan); background: #FFFFFF; box-shadow: 0 12px 22px -10px rgba(0,168,232,0.2);}
+  .compare-title {
+    font-weight: 800;
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+  }
+  .feature-list {
+    list-style: none;
+  }
+  .feature-list li {
+    margin-bottom: 0.7rem;
+    display: flex;
+    gap: 0.6rem;
+    font-size: 0.9rem;
+  }
 
-/* ── Animations ──────────────────────────── */
-@keyframes fadeUp { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
-.cover-inner > * { animation: fadeUp .7s ease both; }
-.cover-inner > *:nth-child(1) { animation-delay: .05s; }
-.cover-inner > *:nth-child(2) { animation-delay: .14s; }
-.cover-inner > *:nth-child(3) { animation-delay: .22s; }
-.cover-inner > *:nth-child(4) { animation-delay: .32s; }
-.cover-inner > *:nth-child(5) { animation-delay: .42s; }
-.cover-inner > *:nth-child(6) { animation-delay: .50s; }
-.cover-kpis { animation: fadeUp .7s .6s ease both; }
+  /* antes/despues table style */
+  .table-modern {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--off-white);
+    border-radius: 1.25rem;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+  .table-modern th {
+    background: var(--deep-blue);
+    color: white;
+    padding: 1rem 1rem;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-align: left;
+  }
+  .table-modern td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--slate-300);
+    background: white;
+    font-size: 0.85rem;
+  }
 
-@media print { body { background: white; } .brochure { box-shadow: none; max-width: 100%; } .cover { min-height: auto; page-break-after: always; } section { page-break-inside: avoid; } }
+  /* pricing cards */
+  .pricing-card {
+    border-radius: 1.25rem;
+    padding: 1.5rem;
+    transition: all 0.2s;
+    background: white;
+    border: 1px solid var(--slate-300);
+  }
+  .pricing-card.featured {
+    border: 2px solid var(--vibrant-cyan);
+    background: linear-gradient(white, #F9FDFF);
+    position: relative;
+  }
+  .featured-flag {
+    position: absolute;
+    top: -12px;
+    right: 18px;
+    background: var(--sun-gold);
+    padding: 0.2rem 1rem;
+    border-radius: 40px;
+    font-weight: 800;
+    font-size: 0.7rem;
+    color: var(--deep-blue);
+  }
+  .price {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--deep-blue);
+  }
+  .btn-outline {
+    border: 1px solid var(--electric-blue);
+    background: transparent;
+    border-radius: 60px;
+    padding: 0.6rem 1.2rem;
+    font-weight: 700;
+    transition: 0.2s;
+    display: inline-block;
+    text-align: center;
+    width: 100%;
+  }
+  .btn-primary {
+    background: var(--electric-blue);
+    color: white;
+    border-radius: 60px;
+    padding: 0.8rem 1.8rem;
+    font-weight: 700;
+    transition: all 0.2s;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-primary:hover {
+    background: var(--vibrant-cyan);
+    transform: scale(0.98);
+  }
+  .cta-gold {
+    background: var(--sun-gold);
+    color: var(--deep-blue);
+    font-weight: 800;
+  }
+  footer {
+    background: var(--deep-blue);
+    color: #9EB4D4;
+    text-align: center;
+    padding: 1.5rem;
+    font-size: 0.75rem;
+  }
 
-@media (max-width: 680px) {
-  section { padding: 48px 24px; } .cover-inner { padding: 48px 24px 36px; }
-  .features-grid, .plans-grid, .why-grid, .steps, .incentives, .qr-explain { grid-template-columns: 1fr; }
-  .cta-section { grid-template-columns: 1fr; }
-  .footer { flex-direction: column; gap: 8px; text-align: center; }
-  .steps::before { display: none; }
-  .incentives { grid-template-columns: 1fr 1fr; }
-  .qr-ranking { flex-direction: column; text-align: center; }
-  .hotel-banner { grid-template-columns: 1fr; }
-}
+  @media (max-width: 640px) {
+    .two-cols-compare { grid-template-columns: 1fr; }
+    .hero-cover { padding: 2rem 1.5rem; }
+  }
+  .mobile-friendly-list li {
+    margin-bottom: 0.5rem;
+  }
+  .inline-icon {
+    background: var(--green-mint);
+    border-radius: 100px;
+    width: 20px;
+    height: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+  }
 </style>
 </head>
 <body>
 <div class="brochure">
-
-<!-- ══════════════════ PORTADA -->
-<div class="cover">
-  <div class="cover-geo"></div>
-  <div class="cover-accent"></div>
-  <div class="cover-stripe"></div>
-  <div class="cover-inner">
-    <span class="cover-tag">NODO Cía. Ltda. — Tecnología pionera en Loja · 2025</span>
-    <div class="cover-brand">TRUEKE</div>
-    <div class="cover-sub">para hoteles.</div>
-    <p class="cover-tagline">La plataforma interactiva todo-en-uno que transforma la experiencia de su huésped: pagos QR unificados, publicidad digital, WiFi, transporte con Clipp y calificación — en un solo dispositivo instalado en su recepción.</p>
-    <div class="cover-badge"><strong>50% de descuento</strong> Plan PYMES/Corporativo exclusivo para hoteles</div>
-    <div class="cover-qr-hint">
-      <span>Parte del ecosistema <strong>QR Ciudad Loja</strong> — la plataforma digital oficial de la ciudad. Con TRUEKE, su hotel aparece primero en el directorio.</span>
-    </div>
-  </div>
-  <div class="cover-kpis">
-    <div class="cover-kpi"><div class="kpi-val">5 en 1</div><div class="kpi-lbl">Funciones integradas</div></div>
-    <div class="cover-kpi"><div class="kpi-val">desde $35</div><div class="kpi-lbl">Plan mensual</div></div>
-    <div class="cover-kpi"><div class="kpi-val">24 h</div><div class="kpi-lbl">Soporte local en Loja</div></div>
-  </div>
-</div>
-
-<!-- ══════════════════ QR CIUDAD -->
-<section class="qr-section">
-  <p class="eyebrow">El ecosistema digital de Loja</p>
-  <h2 class="sec-title" style="color:var(--white)">QR Ciudad: <em style="color:var(--cyan)">toda Loja en un código.</em></h2>
-  <p class="sec-lead" style="color:rgba(255,255,255,.62)">QR Ciudad es la plataforma digital oficial gratuita de Loja. Turistas, visitantes y ciudadanos escanean un QR y acceden al directorio completo de hoteles, restaurantes y comercios de la ciudad. Su hotel ya estará ahí — la pregunta es cómo aparecerá.</p>
-
-  <div class="qr-explain">
-    <div class="qr-col-free">
-      <div class="qr-col-label">Sin TRUEKE — Perfil básico gratuito</div>
-      <div class="qr-item"><div class="qr-dot"></div><div class="qr-item-text">El nombre de su hotel aparece en el directorio de QR Ciudad</div></div>
-      <div class="qr-item"><div class="qr-dot"></div><div class="qr-item-text">Dirección y foto de perfil básica visible</div></div>
-      <div class="qr-item"><div class="qr-dot"></div><div class="qr-item-text">El visitante ve su hotel en la lista — pero <em style="color:rgba(255,255,255,.38)">no puede ingresar a su perfil ni acceder a más información</em></div></div>
-      <div class="qr-item"><div class="qr-dot"></div><div class="qr-item-text">Sin redirección, sin contacto directo, sin reservas</div></div>
-      <div class="qr-item"><div class="qr-dot"></div><div class="qr-item-text">Posición estándar entre todos los hoteles de la ciudad</div></div>
-    </div>
-    <div class="qr-col-trueke">
-      <div class="qr-col-label">Con TRUEKE — Perfil completo y activo</div>
-      <div class="qr-item"><div class="qr-dot"></div><div class="qr-item-text">Al presionar su hotel, el visitante accede a <strong>toda la información del establecimiento</strong></div></div>
-      <div class="qr-item"><div class="qr-dot"></div><div class="qr-item-text">Servicios, habitaciones, tarifas, galería y <strong>reserva directa</strong></div></div>
-      <div class="qr-item"><div class="qr-dot"></div><div class="qr-item-text">Contacto inmediato: teléfono, WhatsApp y redes sociales</div></div>
-      <div class="qr-item"><div class="qr-dot"></div><div class="qr-item-text">Calificaciones reales visibles antes de que el visitante elija dónde hospedarse</div></div>
-      <div class="qr-item"><div class="qr-dot"></div><div class="qr-item-text"><strong>Posición destacada en el ranking</strong> — su hotel aparece primero en los resultados</div></div>
-    </div>
-    <div class="qr-ranking">
-      <div class="qr-ranking-ico">🏆</div>
-      <div>
-        <div class="qr-ranking-title">Plan PYMES o Corporativo = ranking prioritario en QR Ciudad</div>
-        <div class="qr-ranking-body">Los hoteles con Plan PYMES o Corporativo de TRUEKE obtienen posición preferencial en el directorio oficial de Loja. Cuando un turista busca alojamiento, su hotel aparece primero — antes que cualquier competidor sin plan activo.</div>
+  <!-- HERO / COVER MEJORADA -->
+  <div class="hero-cover">
+    <div class="hero-inner">
+      <div class="hero-tag">✨ NODO Cia. Ltda · Loja 2025 · Tecnología hotelera</div>
+      <h1 class="hero-title">TRUEKE <strong>para hoteles</strong></h1>
+      <div class="hero-sub">La pantalla inteligente que organiza pagos, mejora la atención y conecta su hotel con QR Ciudad Loja. Todo desde la recepción.</div>
+      <div class="hero-badge">🔥 50% de descuento Plan PYMES y Corporativo</div>
+      <div class="stats-row">
+        <div class="stat-item"><h3>5 en 1</h3><p>todo en pantalla</p></div>
+        <div class="stat-item"><h3>desde $35</h3><p>al mes</p></div>
+        <div class="stat-item"><h3>24h soporte</h3><p>en Loja</p></div>
       </div>
     </div>
   </div>
-</section>
 
-<!-- ══════════════════ QUÉ ES TRUEKE -->
-<section>
-  <p class="eyebrow">El producto</p>
-  <h2 class="sec-title">Una sola pantalla.<br><em>Cinco soluciones integradas.</em></h2>
-  <p class="sec-lead">TRUEKE es la primera plataforma de experiencia del cliente instalada en hoteles de Loja. Un dispositivo interactivo en su recepción que ningún huésped necesita descargar ni instalar.</p>
+  <!-- QR CIUDAD + TRUEKE DIRECTORY (mejorada visual) -->
+  <section class="qr-highlight" style="background: #F2F9FF;">
+    <div class="badge-eyebrow">QR ciudad · directorio oficial</div>
+    <h2 class="section-title">Loja entera, en un <span>código</span></h2>
+    <p class="section-lead">Su hotel ya está en el directorio gratuito de Loja. La diferencia es cómo aparece: básico o con toda la información para que el turista reserve con usted.</p>
+    
+    <div class="two-cols-compare">
+      <div class="compare-card free">
+        <div class="compare-title">📋 Sin TRUEKE</div>
+        <ul class="feature-list">
+          <li>⚫ Nombre y dirección únicamente</li>
+          <li>⚫ Sin fotos, sin servicios, sin contacto</li>
+          <li>⚫ El visitante no puede reservar</li>
+          <li>⚫ El huesped elige otro hotel</li>
+        </ul>
+      </div>
+      <div class="compare-card trueke">
+        <div class="compare-title">✅ Con plan TRUEKE activo</div>
+        <ul class="feature-list">
+          <li>🌟 Perfil completo: habitaciones, precios, fotos</li>
+          <li>🌟 Reserva directa y contacto WhatsApp/teléfono</li>
+          <li>🌟 Ve opiniones antes de decidir</li>
+          <li><strong>🚀 Su hotel aparece PRIMERO en los resultados de Loja</strong></li>
+        </ul>
+      </div>
+    </div>
+    <div style="background: var(--sun-gold); border-radius: 1rem; padding: 1rem 1.5rem; margin-top: 0.5rem;">
+      <p style="font-weight: 700; color: #001F42;">📢 Plan PYMES o Corporativo: prioridad máxima en QR Ciudad. Cuando un turista busca alojamiento, usted aparece primero.</p>
+    </div>
+  </section>
 
-  <div class="features-grid">
-    <div class="feat-card">
-      <div class="feat-ico"><svg viewBox="0 0 24 24"><path d="M3 3h7v7H3zm11 0h7v7h-7zM3 14h7v7H3zm11 0h7v7h-7z"/></svg></div>
-      <div class="feat-name">Pagos QR unificados</div>
-      <div class="feat-desc">Todos los bancos y billeteras digitales en una sola pantalla ordenada. Elimina el caos de QR en papel y eleva la imagen profesional de su recepción al instante.</div>
+  <!-- FUNCIONALIDADES 😍 Cards interactivas -->
+  <section>
+    <div class="badge-eyebrow">¿cómo funciona?</div>
+    <h2 class="section-title">Todo lo que su recepción <span>necesita</span>, en una pantalla</h2>
+    <div class="grid-2cols">
+      <div class="card-glass"><h3>💳 Todos los pagos en orden</h3><p>Unifica múltiples códigos QR bancarios en una interfaz limpia y profesional, evita el desorden en el mostrador.</p></div>
+      <div class="card-glass"><h3>📢 Su propio espacio publicitario</h3><p>Muestre promociones, menú del restaurante o servicios especiales. Contenido actualizable al instante desde su celular.</p></div>
+      <div class="card-glass"><h3>📶 Clave WiFi siempre visible</h3><p>La contraseña visible 24/7. Su equipo deja de repetirla constantemente y ahorra tiempo valioso.</p></div>
+      <div class="card-glass"><h3>🚕 Taxi con Clipp integrado</h3><p>El huésped solicita transporte con un toque, conectado con Clipp, sin llamar a recepción.</p></div>
+      <div class="card-glass"><h3>⭐ Opiniones que llegan solas</h3><p>Recoge calificaciones automáticas que se publican en Google, Booking y TripAdvisor justo cuando el huésped está satisfecho.</p></div>
+      <div class="card-glass"><h3>📱 Control total desde móvil</h3><p>Actualice la pantalla en tiempo real sin técnicos: promociones, mensajes, servicios. Usted manda.</p></div>
     </div>
-    <div class="feat-card">
-      <div class="feat-ico"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
-      <div class="feat-name">Publicidad digital propia</div>
-      <div class="feat-desc">Exhiba las promociones del día, el menú de su restaurante y los servicios del hotel en pantalla dinámica. Actualizable por su equipo desde cualquier dispositivo.</div>
+    <div style="margin-top: 2rem; background: var(--green-mint); border-radius: 1.2rem; padding: 1.2rem 1.8rem; border-left: 6px solid var(--success-green);">
+      <p style="font-weight: 700;">🏆 Primer hotel con TRUEKE en Loja: ya genera más reservas directas y visibilidad destacada. La ventaja temprana marca diferencia.</p>
     </div>
-    <div class="feat-card">
-      <div class="feat-ico"><svg viewBox="0 0 24 24"><path d="M1.5 8.5C5 5 10 3 12 3s7 2 10.5 5.5M4.5 11.5C7 9 9.5 8 12 8s5 1 7.5 3.5M7.5 14.5C9 13 10.5 12 12 12s3 1 4.5 2.5M12 18h.01"/></svg></div>
-      <div class="feat-name">WiFi siempre visible</div>
-      <div class="feat-desc">La contraseña del WiFi disponible en pantalla las 24 horas. Cero interrupciones al personal de recepción por esta consulta que se repite decenas de veces al día.</div>
+  </section>
+
+  <!-- ANTES & DESPUÉS tabla renovada -->
+  <section style="background: var(--slate-100);">
+    <div class="badge-eyebrow">Cambios reales</div>
+    <h2 class="section-title">Lo que cambia <span>con TRUEKE</span></h2>
+    <table class="table-modern">
+      <thead>
+        <tr><th>Situación</th><th>Sin TRUEKE</th><th>Con TRUEKE</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>💰 Pagos</td><td>Múltiples códigos con cinta adhesiva, imagen descuidada</td><td>Pantalla ordenada con todos los métodos, cobro ágil y profesional</td></tr>
+        <tr><td>📶 WiFi</td><td>El recepcionista repite la clave docenas de veces</td><td>Siempre visible en pantalla, esa pregunta desaparece</td></tr>
+        <tr><td>🚖 Taxi</td><td>Llamada a recepción, coordinar, espera</td><td>Huésped pide en 10s con Clipp, nadie interviene</td></tr>
+        <tr><td>⭐ Opiniones</td><td>Formularios por correo que nadie llena</td><td>Calificación antes de salir, publicada automáticamente en Google y Booking</td></tr>
+        <tr><td>📍 QR Ciudad</td><td>Solo nombre, el turista se va a otro hotel</td><td>Perfil completo + prioridad en resultados = más reservas</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- PRECIOS claros y amigables -->
+  <section>
+    <div class="badge-eyebrow">Planes y precios</div>
+    <h2 class="section-title">El plan perfecto para <span>su hotel</span></h2>
+    <div class="grid-3cols">
+      <div class="pricing-card"><h3>Exclusivo</h3><p>Pantalla 100% personalizada, sin publicidad externa</p><div class="price">$75<small style="font-size: 0.9rem;">/mes</small></div><ul style="margin:1rem 0;list-style:none"><li>✔ Su marca completa</li><li>✔ Pagos QR, WiFi, Clipp</li><li>✔ Soporte NODO 7/7</li><li>✔ Perfil QR Ciudad activo</li></ul><a href="#" class="btn-outline" style="display:block;text-align:center;">Conocer más</a></div>
+      <div class="pricing-card"><h3>Compartido 3</h3><p>Comparte con 2 negocios, ahorro del 33%</p><div class="price">$50<small style="font-size: 0.9rem;">/mes</small></div><ul style="margin:1rem 0;list-style:none"><li>✔ Prioridad en pantalla</li><li>✔ Multipago + Clipp</li><li>✔ Actualización móvil</li><li>✔ Perfil en directorio</li></ul><a href="#" class="btn-outline" style="display:block;text-align:center;">Ver oferta</a></div>
+      <div class="pricing-card featured"><div class="featured-flag">OFERTA HOTELES</div><h3>Plan PYMES & Corporativo</h3><p>Varias pantallas + prioridad #1 en QR Ciudad</p><div class="price">$75 <span style="font-size:0.9rem;">(desde)</span></div><div style="text-decoration:line-through;color:#aaa;">$150+ / mes</div><ul style="margin:1rem 0;list-style:none"><li>🔥 Destacado primero en el directorio</li><li>✔ Múltiples pantallas, control central</li><li>✔ Capacitación gratuita</li><li>✔ Soporte prioritario Loja</li></ul><a href="#" class="btn-primary" style="width:100%;text-align:center;">Activar 50% descuento</a></div>
     </div>
-    <div class="feat-card">
-      <div class="feat-ico"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
-      <div class="feat-name">Transporte con Clipp</div>
-      <div class="feat-desc">El huésped solicita su viaje directamente desde la pantalla TRUEKE, integrado con <strong>Clipp</strong> — la plataforma de transporte de Loja. Sin llamadas al personal, sin esperas innecesarias.</div>
+    <div style="margin-top: 2rem; background: var(--deep-blue); border-radius: 1.2rem; padding: 1.5rem; color:white; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;">
+      <div><span style="font-weight: 800;">⭐ Lanzamiento especial: primer mes sin costo + 15 días de prueba</span><br>Instalación en 24h, sin contrato forzoso.</div>
+      <div><span style="background: var(--sun-gold); padding:0.3rem 1rem; border-radius: 60px; color: #001F42; font-weight:800;">GRATIS primer mes</span></div>
     </div>
-    <div class="feat-card">
-      <div class="feat-ico"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
-      <div class="feat-name">Calificación en tiempo real</div>
-      <div class="feat-desc">El huésped evalúa al momento de pagar o al salir. Cada calificación alimenta directamente <strong>Google, Booking y TripAdvisor</strong>, construyendo su reputación online de forma automática.</div>
+  </section>
+
+  <!-- COMPARATIVA completa frente a otras opciones -->
+  <section style="background: var(--off-white);">
+    <div class="badge-eyebrow">Comparativa inteligente</div>
+    <h2 class="section-title">¿Qué tiene TRUEKE <span>que otros no?</span></h2>
+    <div style="overflow-x: auto;">
+      <table class="table-modern" style="min-width: 500px;">
+        <thead><tr><th>Funcionalidad</th><th>QR en papel</th><th>TV estática</th><th>App propia</th><th style="background: var(--vibrant-cyan);">TRUEKE</th></tr></thead>
+        <tbody>
+          <tr><td>Pagos unificados</td><td>❌</td><td>❌</td><td>❌</td><td>✅</td></tr>
+          <tr><td>Publicidad actualizable al instante</td><td>❌</td><td>⚠️ limitada</td><td>❌</td><td>✅</td></tr>
+          <tr><td>Calificaciones → Google/Booking</td><td>❌</td><td>❌</td><td>⚠️ parcial</td><td>✅ automático</td></tr>
+          <tr><td>Taxi Clipp integrado</td><td>❌</td><td>❌</td><td>❌</td><td>✅</td></tr>
+          <tr><td>Perfil completo + prioridad QR Ciudad</td><td>❌</td><td>❌</td><td>❌</td><td>✅ #1 en ranking</td></tr>
+          <tr><td>Soporte técnico local en Loja</td><td>❌</td><td>❌</td><td>❌</td><td>✅ humano 7 días</td></tr>
+        </tbody>
+      </table>
     </div>
-    <div class="feat-card">
-      <div class="feat-ico"><svg viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
-      <div class="feat-name">Gestión remota total</div>
-      <div class="feat-desc">Actualice contenidos, promociones e imágenes desde su celular o computadora en cualquier momento. Sin visitas técnicas, sin intermediarios, sin espera.</div>
+    <div class="pullquote" style="margin-top: 2rem; background: linear-gradient(110deg, #EFF0F5, white); padding: 1.4rem; border-radius: 1.2rem; border-left: 5px solid var(--vibrant-cyan);"><p style="font-weight: 600;">"Hoteles que el turista encuentra y reserva vs hoteles que el turista ve pero no puede contactar. Con TRUEKE usted elige estar en el primer grupo."</p><cite style="font-size:0.7rem;">— NODO Cia. Ltda · Loja</cite></div>
+  </section>
+
+  <!-- PROCESO 3 PASOS -->
+  <section>
+    <div class="badge-eyebrow">Empezar es fácil</div>
+    <h2 class="section-title">Tres pasos y su hotel <span>ya está adentro</span></h2>
+    <div class="grid-3cols" style="margin-top: 1rem;">
+      <div class="card-glass" style="text-align: center;"><div style="background: var(--vibrant-cyan); width: 48px; height: 48px; display: flex; margin:0 auto 1rem; border-radius: 60px; align-items: center; justify-content: center; color:white; font-weight:800;">1</div><h3>Visita gratuita</h3><p>Vamos a su hotel, mostramos diseño personalizado sin compromiso.</p></div>
+      <div class="card-glass" style="text-align: center;"><div style="background: var(--vibrant-cyan); width: 48px; height: 48px; display: flex; margin:0 auto 1rem; border-radius: 60px; align-items: center; justify-content: center; color:white; font-weight:800;">2</div><h3>Instalación en 24h</h3><p>Pantalla, configuración y capacitación gratuita del equipo.</p></div>
+      <div class="card-glass" style="text-align: center;"><div style="background: var(--vibrant-cyan); width: 48px; height: 48px; display: flex; margin:0 auto 1rem; border-radius: 60px; align-items: center; justify-content: center; color:white; font-weight:800;">3</div><h3>Primero en QR Ciudad</h3><p>Su hotel aparece destacado, calificaciones en tiempo real y reportes mensuales.</p></div>
     </div>
+  </section>
+
+  <!-- CTA final con gran usabilidad -->
+  <div style="background: linear-gradient(145deg, #002B5C, #001A3B); border-radius: 0 0 1.5rem 1.5rem; padding: 3rem 2rem; text-align: center; color: white;">
+    <h2 style="font-size: 2rem; font-weight:800;">Pruebe TRUEKE sin riesgo · 15 días gratis</h2>
+    <p style="margin: 1rem auto 2rem; max-width: 500px; opacity: 0.9;">Instalamos, capacitamos y activamos su perfil destacado. Sin contrato inicial, decida con resultados reales.</p>
+    <div style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center;">
+      <a href="mailto:info@electritelecom.com?subject=TRUEKE%20Hotel" class="btn-primary" style="background: var(--sun-gold); color: #001F42; font-size: 1rem;">📅 Agendar visita gratuita</a>
+      <a href="#" class="btn-outline" style="background: transparent; border-color: white; color: white;">Conocer más</a>
+    </div>
+    <div style="margin-top: 1.5rem; font-size: 0.75rem; letter-spacing: 0.05em;">📧 info@electritelecom.com · Loja · Catamayo · Zamora Chinchipe</div>
   </div>
 
-  <div class="pioneer-banner">
-    <div class="pioneer-ico">🚀</div>
-    <div>
-      <div class="pioneer-title">La primera plataforma de experiencia del cliente en Loja</div>
-      <div class="pioneer-body">TRUEKE no es una pantalla más — es el inicio de una transformación digital real en la hospitalidad lojana. Los hoteles que adoptan TRUEKE hoy lideran un cambio que el sector entero seguirá. Ser pionero en Loja tiene un valor que ninguna campaña publicitaria puede comprar.</div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════ POR QUÉ -->
-<section class="why-section">
-  <p class="eyebrow">Por qué adoptarlo</p>
-  <h2 class="sec-title">Lo que TRUEKE<br><em>desencadena en su hotel.</em></h2>
-
-  <div class="why-grid">
-    <div class="why-card">
-      <div class="why-stat">+5–10%</div>
-      <div class="why-title">Impulso en ventas</div>
-      <div class="why-body">Cuando sus servicios y promociones se exhiben frente al huésped en el momento preciso, las decisiones de compra ocurren solas. Su restaurante, su spa y sus upgrades se venden sin que el personal deba ofrecerlos.</div>
-    </div>
-    <div class="why-card">
-      <div class="why-stat">Más ★</div>
-      <div class="why-title">Reputación online</div>
-      <div class="why-body">Las reseñas se capturan cuando el huésped aún está satisfecho y en el establecimiento. Ese flujo constante de calificaciones eleva su posición en Google, Booking y TripAdvisor.</div>
-    </div>
-    <div class="why-card">
-      <div class="why-stat">−40%</div>
-      <div class="why-title">Consultas al personal</div>
-      <div class="why-body">WiFi, métodos de pago, transporte y servicios resueltos en pantalla. Su equipo recupera tiempo para dedicarse a lo que realmente importa: la hospitalidad.</div>
-    </div>
-    <div class="why-card">
-      <div class="why-stat">Top</div>
-      <div class="why-title">Ranking en QR Ciudad</div>
-      <div class="why-body">Con Plan PYMES o Corporativo activo, su hotel se posiciona entre los primeros resultados del directorio oficial de Loja. Los turistas lo encuentran antes que a la competencia.</div>
-    </div>
-    <div class="why-card">
-      <div class="why-stat">24/7</div>
-      <div class="why-title">Su hotel, siempre visible</div>
-      <div class="why-body">A través de QR Ciudad, su establecimiento está accesible para cualquier persona en Loja en cualquier momento del día — local, turista o visitante.</div>
-    </div>
-  </div>
-
-  <div class="pullquote">
-    <p>"El hotel que adopta TRUEKE hoy no solo moderniza su recepción. Ocupa un lugar en el mapa digital de Loja que la competencia tardará en alcanzar."</p>
-    <cite>NODO Cía. Ltda. — Loja, Ecuador · 2025</cite>
-  </div>
-</section>
-
-<!-- ══════════════════ ANTES / DESPUÉS -->
-<section class="ba-section">
-  <p class="eyebrow">Comparación operativa</p>
-  <h2 class="sec-title">Su recepción,<br><em>antes y después.</em></h2>
-  <p class="sec-lead">Situaciones reales que ocurren todos los días en hoteles de Loja y cómo TRUEKE las transforma.</p>
-
-  <table class="ba-table">
-    <thead>
-      <tr><th>Situación</th><th>Sin TRUEKE</th><th>Con TRUEKE</th></tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>Cobro digital</td>
-        <td>Cinco o más QR en papel pegados con cinta. Imagen informal y desorganizada ante el huésped.</td>
-        <td>Una sola pantalla elegante con todos los QR accesibles. Primera impresión de calidad y modernidad.</td>
-      </tr>
-      <tr>
-        <td>Contraseña WiFi</td>
-        <td>El huésped interrumpe al personal múltiples veces al día. Tiempo y energía malgastados.</td>
-        <td>Contraseña visible en pantalla las 24 horas. El personal no vuelve a responder esa pregunta.</td>
-      </tr>
-      <tr>
-        <td>Solicitud de transporte</td>
-        <td>Recepción llama, espera y coordina con taxistas. Tiempo robado a otras tareas del servicio.</td>
-        <td>El huésped solicita su viaje con Clipp directamente desde la pantalla en segundos.</td>
-      </tr>
-      <tr>
-        <td>Calificación del servicio</td>
-        <td>La encuesta llega por correo días después. Casi nadie la completa a esa distancia.</td>
-        <td>El huésped califica antes de salir. Cada opinión se publica en Google, Booking y TripAdvisor.</td>
-      </tr>
-      <tr>
-        <td>Visibilidad en QR Ciudad</td>
-        <td>Solo aparece el nombre del hotel. El visitante no puede ingresar a su perfil ni acceder a información.</td>
-        <td>Perfil completo y activo: servicios, galería, contacto, reservas y posición destacada en el ranking.</td>
-      </tr>
-      <tr>
-        <td>Promociones del hotel</td>
-        <td>Sin canal para exhibir ofertas del día al huésped ya hospedado en el establecimiento.</td>
-        <td>Las promociones rotan en pantalla durante toda la estadía, generando ventas adicionales pasivas.</td>
-      </tr>
-    </tbody>
-  </table>
-</section>
-
-<!-- ══════════════════ PRECIOS -->
-<section class="pricing-section">
-  <p class="eyebrow">Planes y precios</p>
-  <h2 class="sec-title">Todos los planes.<br><em>Una oferta especial para hoteles.</em></h2>
-
-  <div class="plans-grid">
-    <div class="plan-card">
-      <div class="plan-name">Plan Exclusivo</div>
-      <div class="plan-desc">Pantalla 100% del negocio, sin publicidad de terceros. Control total sobre cada contenido mostrado.</div>
-      <div class="plan-price-row"><div class="plan-price"><sup>$</sup>75</div><div class="plan-period">/ mes</div></div>
-      <div class="plan-note">Precio estándar para todos los negocios</div>
-      <div class="plan-div"></div>
-      <ul class="plan-feats">
-        <li>Pantalla 100% personalizada del hotel</li>
-        <li>Publicidad propia en pantalla dinámica</li>
-        <li>QR unificados, WiFi, Clipp y calificación</li>
-        <li>Gestión remota desde cualquier dispositivo</li>
-        <li>Soporte técnico NODO Loja 7 días</li>
-        <li>Perfil activo en directorio QR Ciudad</li>
-      </ul>
-    </div>
-
-    <div class="plan-card">
-      <div class="plan-name">Plan Compartido 3</div>
-      <div class="plan-desc">Descuento del 33% a cambio de incluir publicidad de hasta 3 marcas externas en la misma pantalla.</div>
-      <div class="plan-price-row"><div class="plan-price"><sup>$</sup>50</div><div class="plan-period">/ mes</div></div>
-      <div class="plan-note">33% de ahorro vs Plan Exclusivo</div>
-      <div class="plan-div"></div>
-      <ul class="plan-feats">
-        <li>Publicidad del hotel en rotación prioritaria</li>
-        <li>Hasta 3 marcas externas complementarias</li>
-        <li>QR unificados, WiFi, Clipp y calificación</li>
-        <li>Gestión remota desde cualquier dispositivo</li>
-        <li>Soporte técnico NODO Loja 7 días</li>
-        <li>Perfil activo en directorio QR Ciudad</li>
-      </ul>
-    </div>
-
-    <div class="plan-card">
-      <div class="plan-name">Plan Compartido 5</div>
-      <div class="plan-desc">Descuento del 53% a cambio de incluir publicidad de hasta 5 marcas externas en la misma pantalla.</div>
-      <div class="plan-price-row"><div class="plan-price"><sup>$</sup>35</div><div class="plan-period">/ mes</div></div>
-      <div class="plan-note">53% de ahorro vs Plan Exclusivo</div>
-      <div class="plan-div"></div>
-      <ul class="plan-feats">
-        <li>Publicidad del hotel en rotación</li>
-        <li>Hasta 5 marcas externas en pantalla</li>
-        <li>QR unificados, WiFi, Clipp y calificación</li>
-        <li>Gestión remota desde cualquier dispositivo</li>
-        <li>Soporte técnico NODO Loja 7 días</li>
-        <li>Perfil activo en directorio QR Ciudad</li>
-      </ul>
-    </div>
-
-    <div class="plan-card featured">
-      <div class="plan-name">Plan PYMES / Corporativo</div>
-      <div class="plan-desc">Para hoteles grandes, cadenas y múltiples puntos de atención. Gestión y reporte centralizado.</div>
-      <div class="plan-price-row"><div class="plan-price"><sup>$</sup>150<sup style="font-size:16px">+</sup></div><div class="plan-period">/ mes</div></div>
-      <div class="plan-note">Precio según requerimientos del proyecto</div>
-      <div class="plan-div"></div>
-      <ul class="plan-feats">
-        <li>Múltiples dispositivos bajo un panel</li>
-        <li>Panel centralizado de administración</li>
-        <li>Configuración personalizada completa</li>
-        <li>Capacitación gratuita al personal del hotel</li>
-        <li>Soporte técnico NODO Loja prioritario</li>
-        <li>Perfil activo en directorio QR Ciudad</li>
-      </ul>
-      <div class="plan-qr-tag">Ranking prioritario en QR Ciudad — su hotel aparece primero en el directorio oficial de Loja cuando un turista busca alojamiento</div>
-    </div>
-  </div>
-
-  <div class="hotel-banner">
-    <div>
-      <div class="hb-label">Oferta exclusiva para hoteles de Loja, Catamayo y la región</div>
-      <div class="hb-title">Plan PYMES / Corporativo con <span>50% de descuento</span></div>
-      <div class="hb-sub">Solo para establecimientos hoteleros — vigente durante el período de lanzamiento.</div>
-    </div>
-    <div class="hb-price">
-      <div class="hb-old">$150+ / mes</div>
-      <div class="hb-new">$75</div>
-      <div class="hb-per">/ mes para hoteles</div>
-    </div>
-  </div>
-
-  <div class="incentives">
-    <div class="incentive">
-      <div class="inc-ico">🎁</div>
-      <div class="inc-title">1er mes gratis</div>
-      <div class="inc-desc">Al firmar durante el período de lanzamiento. Sin condición de permanencia.</div>
-    </div>
-    <div class="incentive">
-      <div class="inc-ico">⚡</div>
-      <div class="inc-title">Instalación 24h</div>
-      <div class="inc-desc">Para hoteles en Loja ciudad. Pantalla operativa al día siguiente de la firma.</div>
-    </div>
-    <div class="incentive">
-      <div class="inc-ico">🎓</div>
-      <div class="inc-title">Capacitación gratuita</div>
-      <div class="inc-desc">Capacitamos a todo su personal en el uso completo de la plataforma, sin costo.</div>
-    </div>
-    <div class="incentive">
-      <div class="inc-ico">📱</div>
-      <div class="inc-title">Prueba 15 días</div>
-      <div class="inc-desc">Demo gratuita sin compromiso ni contrato. Decida con datos reales de su hotel.</div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════ COMPARACIÓN -->
-<section class="comp-section">
-  <p class="eyebrow">Diferenciación</p>
-  <h2 class="sec-title">TRUEKE frente a<br><em>otras alternativas.</em></h2>
-  <p class="sec-lead">Ninguna otra solución disponible en Loja integra todas estas capacidades en un solo dispositivo, con soporte técnico local y conexión al ecosistema QR Ciudad.</p>
-
-  <table class="comp-table">
-    <thead>
-      <tr>
-        <th>Capacidad</th><th>QR en papel</th><th>Pantalla TV</th><th>App del hotel</th><th>TRUEKE</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr><td>QR de pago centralizado</td><td><span class="crs">✕</span></td><td><span class="crs">✕</span></td><td><span class="crs">✕</span></td><td><span class="si">SI</span></td></tr>
-      <tr><td>Publicidad dinámica actualizable</td><td><span class="crs">✕</span></td><td><span class="wrn">parcial</span></td><td><span class="crs">✕</span></td><td><span class="si">SI</span></td></tr>
-      <tr><td>Calificación → Google / Booking</td><td><span class="crs">✕</span></td><td><span class="crs">✕</span></td><td><span class="wrn">parcial</span></td><td><span class="si">SI</span></td></tr>
-      <tr><td>Transporte integrado con Clipp</td><td><span class="crs">✕</span></td><td><span class="crs">✕</span></td><td><span class="crs">✕</span></td><td><span class="si">SI</span></td></tr>
-      <tr><td>Sin app para el huésped</td><td><span class="chk">✓</span></td><td><span class="chk">✓</span></td><td><span class="crs">✕</span></td><td><span class="si">SI</span></td></tr>
-      <tr><td>Perfil activo en QR Ciudad</td><td><span class="crs">✕</span></td><td><span class="crs">✕</span></td><td><span class="crs">✕</span></td><td><span class="si">SI</span></td></tr>
-      <tr><td>Ranking prioritario en directorio Loja</td><td><span class="crs">✕</span></td><td><span class="crs">✕</span></td><td><span class="crs">✕</span></td><td><span class="si">SI</span></td></tr>
-      <tr><td>Soporte técnico presencial en Loja</td><td><span class="crs">✕</span></td><td><span class="crs">✕</span></td><td><span class="crs">✕</span></td><td><span class="si">SI</span></td></tr>
-      <tr><td>Precio accesible para PYME hotelera</td><td><span class="chk">✓</span></td><td><span class="crs">✕</span></td><td><span class="wrn">variable</span></td><td><span class="si">SI</span></td></tr>
-    </tbody>
-  </table>
-</section>
-
-<!-- ══════════════════ PROCESO -->
-<section class="process-section">
-  <p class="eyebrow">Cómo empezar</p>
-  <h2 class="sec-title">Tres pasos para activar<br><em>TRUEKE en su hotel.</em></h2>
-  <div class="steps">
-    <div class="step">
-      <div class="step-num">1</div>
-      <div class="step-title">Visita y diagnóstico</div>
-      <div class="step-body">Agendamos una visita gratuita a su hotel. Le mostramos en detalle cómo quedaría TRUEKE con la identidad visual de su establecimiento antes de cualquier compromiso.</div>
-    </div>
-    <div class="step">
-      <div class="step-num">2</div>
-      <div class="step-title">Instalación en 24 horas</div>
-      <div class="step-body">Instalación profesional y capacitación completa y gratuita a todo su equipo. La pantalla queda operativa con la imagen de su marca desde el primer día.</div>
-    </div>
-    <div class="step">
-      <div class="step-num">3</div>
-      <div class="step-title">Activo en QR Ciudad</div>
-      <div class="step-body">Su hotel queda con perfil completo en QR Ciudad desde el día uno. Calificaciones en tiempo real hacia Google y Booking. Reporte mensual de actividad incluido.</div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════ CTA -->
-<div class="cta-section">
-  <div>
-    <h2 class="cta-title">Pruebe TRUEKE<br><em>15 días gratis.</em></h2>
-    <p class="cta-sub">Sin costo. Sin contrato. Instalamos la plataforma, capacitamos a su equipo y su hotel queda activo en QR Ciudad desde el primer día de prueba. Decida con resultados reales de su propio establecimiento.</p>
-  </div>
-  <div class="cta-block">
-    <a href="mailto:info@electritelecom.com" class="cta-btn">Solicitar demo gratuita</a>
-    <div class="cta-contact">
-      <a href="mailto:info@electritelecom.com">info@electritelecom.com</a><br>
-      Loja &middot; Catamayo &middot; Zamora Chinchipe
-    </div>
-  </div>
-</div>
-
-<div class="footer">
-  <div class="footer-brand">TRUEKE</div>
-  <div class="footer-nodo">Desarrollado por NODO Cía. Ltda. — Loja, Ecuador — 2025</div>
-</div>
-
+  <footer>
+    <p>TRUEKE — desarrollado por NODO Cia. Ltda. · Loja, Ecuador 2025 · Tecnología que conecta su hotel con el futuro</p>
+  </footer>
 </div>
 </body>
 </html>
